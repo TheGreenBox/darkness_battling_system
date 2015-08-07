@@ -1,0 +1,77 @@
+digraph G {
+    TField[shape=box];
+        Segments[shape=parallelogram];  // vector<vector<bool>>
+        TField -> Segments;
+        TField -> GetValidPositionGraph -> TPositionGraph;
+        TField -> IsNotOccupied[];
+        TField -> CollapseRows[];
+
+
+    TUnit[shape=box];
+        Segments[shape=parallelogram];
+        Pivot[shape=parallelogram];
+        Move_unit[label="Move"];  // return moved object
+        TUnit -> Move_unit -> TUnit;
+        TUnit -> Rotate -> TUnit;  // return rotated object
+        TUnit -> Segments[comment="vector of TSegments"];
+        TUnit -> Pivot[comment="TSegment"];
+
+
+    TSegment[shape=box];
+        Move_segment[label="Move"];  // return moved object
+        TSegment -> Move_segment -> TSegment;
+
+        Row[shape=parallelogram];
+        Column[shape=parallelogram];
+        TSegment -> Row[];
+        TSegment -> Column[];
+
+
+    TGameSetSettings[shape=box];  // segments in given order, words of power(?)
+
+    TPositionGraph[shape=box];
+        Nodes[shape=parallelogram];
+        TPositionGraph -> Nodes;
+        Nodes -> TGraphNode;
+
+    TGraphNode[shape=box];
+        metrics[shape=parallelogram];
+        links[shape=parallelogram];
+        TGraphNode -> metrics;
+        TGraphNode -> links;
+
+    // Algo
+    CalulateCarrotMetric;
+        // TField
+        // TUnit
+        // return mertic value (int)
+
+        // global return -> vector of priority queue
+
+    TWay[shape=box];  // list of transformation
+        TWay -> Movements[];
+        TWay -> EMoveOperations[];
+
+    WayFinder -> TWay;
+        // Start Unit
+        // End Unit
+        // TPositionGraph
+        // return vector<TWay>
+
+    ChoseMaxPowerWay -> stringWay;
+        // vector<TWay>
+        // vector<std::string> -> Phrases of Power
+        // return TWay index, string with Phrase of Power
+
+    TGameSessionRules[shape=box];
+        TGameSessionRules -> ctor[]; // diserialize
+        JsonInput -> ctor;
+        TGameSessionRules -> nextSet[]; // return TGameSetSettings;
+        TGameSessionRules -> getInitialField[]; // return TField
+
+    TOutput[shape=box];
+        TOutput -> serialize -> JsonOut;
+
+    nextSet -> TGameSetSettings;
+    getInitialField -> TField;
+}
