@@ -1,5 +1,6 @@
 #include "unit.h"
 
+#include "exception.h"
 #include "segment.h"
 
 TUnit::TUnit(const TSegment& pivot, TSegments&& segments)
@@ -14,7 +15,8 @@ TUnit TUnit::Move(EMoveOperations operation) const {
         return Rotate(operation);
     }
     else {
-        // throw
+        throw TException("Invalid move operation recieved")
+            << __FILE__ << ":" << __LINE__;
     }
 
     return Clone();
