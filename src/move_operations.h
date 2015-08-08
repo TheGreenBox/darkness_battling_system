@@ -1,3 +1,5 @@
+#pragma once
+
 enum class EMoveOperations {
     SLIDE_EAST,
     SLIDE_WEST,
@@ -8,6 +10,6 @@ enum class EMoveOperations {
     COUNT
 };
 
-bool isValidOperation(EMoveOperations operation);
-bool isSlideOperation(EMoveOperations operation);
-bool isRotateOperation(EMoveOperations operation);
+bool IsValidOperation(EMoveOperations operation);
+bool IsSlideOperation(EMoveOperations operation);
+bool IsRotateOperation(EMoveOperations operation);

@@ -1,8 +1,8 @@
-bool isValidOperation(EMoveOperations operation) {
+bool IsValidOperation(EMoveOperations operation) {
     return operation < EMoveOperations::COUNT;
 }
 
-bool isSlideOperation(EMoveOperations operation) {
+bool IsSlideOperation(EMoveOperations operation) {
     bool ret = false;
     switch (operation) {
         case EMoveOperations::SLIDE_EAST:
@@ -16,6 +16,6 @@ bool isSlideOperation(EMoveOperations operation) {
     return ret;
 }
 
-bool isRotateOperation(EMoveOperations operation) {
-    return isValidOperation(operation) && !isSlideOperation(operation);
+bool IsRotateOperation(EMoveOperations operation) {
+    return IsValidOperation(operation) && !IsSlideOperation(operation);
 }
