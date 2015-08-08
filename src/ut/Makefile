@@ -4,10 +4,12 @@ CC=g++
 LIB=
 FLAGS=-std=c++11 -Wall -I ../.. -I .. -I .
 
-ut: game_session_rules_ut
+ut: game_session_rules_ut board_ut
+	${PRODUCT}/game_session_rules_ut
+	${PRODUCT}/board_ut
 
 game_session_rules_ut:
-	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/ut \
+	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/game_session_rules_ut \
 	game_session_rules_ut.cpp \
 	../../lib/json/jsoncpp.cpp \
 	../board.cpp \
@@ -18,7 +20,7 @@ game_session_rules_ut:
 	../unit.cpp
 
 board_ut:
-	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/ut \
+	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/board_ut \
 	board_ut.cpp \
 	../board.cpp \
 	../move_operations.cpp \
