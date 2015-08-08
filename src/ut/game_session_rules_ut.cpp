@@ -3,9 +3,10 @@
 
 #include <lib/json/json/json.h>
 
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <iostream>
+#include <vector>
 
 void Test1() {
     std::string in =
@@ -54,7 +55,25 @@ void Test1() {
     }
 }
 
+void TestSeriesGenerator() {
+    std::vector<size_t> rightAnswer{0, 59, 19, 101, 75, 126, 64, 43, 26, 85,};
+    Private::TSeriesGenerator gen(17, 167);
+
+    for (const auto& right : rightAnswer) {
+        size_t generated = gen.Next();
+        if (right != generated) {
+            throw TException("unit test error")
+                << " " << __FILE__ << ":" << __LINE__
+                << " " << "TSeriesGenerator error"
+                << " wrong answer: " << generated
+                << " expected: " << right
+            ;
+        }
+    }
+};
+
 int main() {
     Test1();
+    TestSeriesGenerator();
     return 0;
 }
