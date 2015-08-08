@@ -19,6 +19,9 @@ public:
         EMoveOperations direction
     ) const;
 
+    Coordinate GetRow() const;
+    Coordinate GetColumn() const;
+
 private:
     Coordinate Row;
     Coordinate Column;
