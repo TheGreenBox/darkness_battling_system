@@ -15,7 +15,7 @@ TUnit TUnit::Move(EMoveOperations operation) const {
         return Rotate(operation);
     }
     else {
-        throw TException("Invalid move operation recieved")
+        throw TException("Invalid move operation recieved in ")
             << __FILE__ << ":" << __LINE__;
     }
 
@@ -51,6 +51,10 @@ TUnit::TSegments TUnit::RotateSegments(EMoveOperations direction) const {
     }
 
     return ret;
+}
+
+const TUnit::TSegments& TUnit::GetSegments() const {
+    return Segments;
 }
 
 TUnit TUnit::Clone() const {
