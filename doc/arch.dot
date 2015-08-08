@@ -13,8 +13,8 @@ digraph G {
         Move_unit[label="Move"];  // return moved object
         TUnit -> Move_unit -> TUnit;
         TUnit -> Rotate -> TUnit;  // return rotated object
-        TUnit -> Segments[comment="vector of TSegments"];
-        TUnit -> Pivot[comment="TSegment"];
+        TUnit -> Segments[label="Segments: vector of TSegments"];
+        TUnit -> Pivot[label="Pivot: TSegment"];
 
 
     TSegment[shape=box];
