@@ -1,24 +1,24 @@
 #include "board.h"
 
-bool TBoard::IS_LOCKED = true;
-bool TBoard::IS_UNLOCKED = false;
+bool TBoard::CELL_IS_LOCKED = true;
+bool TBoard::CELL_IS_UNLOCKED = false;
 
 TBoard::TBoard(size_t rows, size_t columns)
-    : SegmentsStatuses(rows, TRow(columns, IS_UNLOCKED)) {}
+    : CellsStatuses(rows, TRow(columns, CELL_IS_UNLOCKED)) {}
 
-void TBoard::LockSegment(size_t row, size_t column) {
-    SetSegmentStatus(row, column, IS_LOCKED);
+void TBoard::LockCell(size_t row, size_t column) {
+    SetCellStatus(row, column, CELL_IS_LOCKED);
 }
 
-void TBoard::SetSegmentStatus(size_t row, size_t column, bool newStatus) {
-    auto& status = SegmentsStatuses.at(row).at(column);
+void TBoard::SetCellStatus(size_t row, size_t column, bool newStatus) {
+    auto& status = CellsStatuses.at(row).at(column);
     status = newStatus;
 }
 
-void TBoard::UnlockSegment(size_t row, size_t column) {
-    SetSegmentStatus(row, column, IS_LOCKED);
+void TBoard::UnlockCell(size_t row, size_t column) {
+    SetCellStatus(row, column, CELL_IS_UNLOCKED);
 }
 
-bool TBoard::SegmentIsLocked(size_t row, size_t column) const {
-    return SegmentsStatuses.at(row).at(column) == IS_LOCKED;
+bool TBoard::CellIsLocked(size_t row, size_t column) const {
+    return CellsStatuses.at(row).at(column) == CELL_IS_LOCKED;
 }
