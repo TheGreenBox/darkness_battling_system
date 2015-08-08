@@ -6,6 +6,20 @@ TUnit::TUnit(const TSegment& pivot, TSegments&& segments)
     : Pivot(pivot)
     , Segments(std::move(segments)) {}
 
+TUnit TUnit::Move(EMoveOperations operation) const {
+    if (IsSlideOperation(operation)) {
+        return Slide(operation);
+    }
+    else if (IsRotateOperation(operation)) {
+        return Rotate(operation);
+    }
+    else {
+        // throw
+    }
+
+    return Clone();
+}
+
 TUnit TUnit::Slide(EMoveOperations direction) const {
     TSegment newPivot = Pivot.Slide(direction);
     return TUnit(newPivot, SlideSegments(direction));
@@ -35,4 +49,8 @@ TUnit::TSegments TUnit::RotateSegments(EMoveOperations direction) const {
     }
 
     return ret;
+}
+
+TUnit TUnit::Clone() const {
+    return TUnit(Pivot, TSegments(Segments));
 }

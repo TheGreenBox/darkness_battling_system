@@ -19,10 +19,13 @@ public:
     TUnit(TUnit&&) = default;
     TUnit& operator=(TUnit&&) = default;
 
+    TUnit Move(EMoveOperations operation) const;
+    TUnit Clone() const;
+
+private:
     TUnit Slide(EMoveOperations direction) const;
     TUnit Rotate(EMoveOperations direction) const;
 
-private:
     TSegments SlideSegments(EMoveOperations direction) const;
     TSegments RotateSegments(EMoveOperations direction) const;
 
