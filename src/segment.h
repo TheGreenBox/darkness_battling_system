@@ -6,8 +6,10 @@
 
 class TSegment {
 public:
+    using Coordinate = int;
+
     TSegment() = delete;
-    TSegment(size_t row, size_t column);
+    TSegment(Coordinate row, Coordinate column);
 
     TSegment Slide(EMoveOperations direction) const;
 
@@ -18,6 +20,6 @@ public:
     ) const;
 
 private:
-    size_t Row;
-    size_t Column;
+    Coordinate Row;
+    Coordinate Column;
 };

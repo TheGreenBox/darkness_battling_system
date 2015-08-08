@@ -1,6 +1,6 @@
 #include "segment.h"
 
-TSegment::TSegment(size_t row, size_t column)
+TSegment::TSegment(Coordinate row, Coordinate column)
     : Row(row)
     , Column(column) {}
 
