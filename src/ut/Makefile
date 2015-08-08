@@ -17,6 +17,14 @@ game_session_rules_ut:
 	../segment.cpp \
 	../unit.cpp
 
+board_ut:
+	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/ut \
+	board_ut.cpp \
+	../board.cpp \
+	../move_operations.cpp \
+	../segment.cpp \
+	../unit.cpp
+
 clear:
 	rm product -r
 
