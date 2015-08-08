@@ -2,6 +2,8 @@
 
 #include "move_operations.h"
 
+#include <cstddef>
+
 class TSegment {
 public:
     TSegment() = delete;
