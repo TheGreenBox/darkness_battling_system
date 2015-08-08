@@ -24,7 +24,7 @@ private:
 
     void SetCellStatus(size_t row, size_t column, Status newStatus);
 
-    static bool RowIsFullyLocked(const TStatusRow& row) const;
+    static bool RowIsFullyLocked(const TStatusRow& row);
 
     TStatusCells Cells;
 };

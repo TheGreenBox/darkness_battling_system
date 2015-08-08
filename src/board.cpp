@@ -13,7 +13,7 @@ void TBoard::LockCell(size_t row, size_t column) {
 }
 
 void TBoard::SetCellStatus(size_t row, size_t column, Status newStatus) {
-    CellsStatuses.at(row).at(column) = newStatus;
+    Cells.at(row).at(column) = newStatus;
 }
 
 void TBoard::UnlockCell(size_t row, size_t column) {
@@ -25,8 +25,9 @@ bool TBoard::CellIsLocked(size_t row, size_t column) const {
 }
 
 size_t TBoard::CollapseRows() {
+    size_t collapsedCount = 0;
     if (!Cells.empty()) {
-        while (RowIsFullyLocked(Cells.last())) {
+        while (RowIsFullyLocked(Cells.back())) {
             auto placeToMoveRow = Cells.rbegin();
             auto rowToMove = std::next(placeToMoveRow);
 
@@ -37,13 +38,17 @@ size_t TBoard::CollapseRows() {
                 rowToMove = std::next(rowToMove);
             }
 
-            TStatusRow& topRow = Cells.last();
-            topRow = TStatusRow(topRow.size, CELL_IS_UNLOCKED);
+            TStatusRow& topRow = Cells.back();
+            topRow = TStatusRow(topRow.size(), CELL_IS_UNLOCKED);
+
+            ++collapsedCount;
         }
     }
+
+    return collapsedCount;
 }
 
-bool TBoard::RowIsFullyLocked(const TStatusRow& row) const {
+bool TBoard::RowIsFullyLocked(const TStatusRow& row) {
     auto result = std::find(row.begin(), row.end(), CELL_IS_UNLOCKED);
     return result == row.end();
 }
