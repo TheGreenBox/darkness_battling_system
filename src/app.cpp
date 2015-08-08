@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 class ArgparseException: public std::exception {
 public:
@@ -32,46 +33,75 @@ private:
     std::string whatHappen = "[argument parser exception] ";
 };
 
-void argparse(int argn, char** args) {
+
+struct TArgs {
+    std::vector<std::string> Filenames;
+    std::vector<std::string> PhraseOfPower;
+    size_t TimeLimit = 0;
+    size_t MemoryLimit = 0;
+    size_t Cores = 1;
+};
+
+TArgs argparse(int argn, char** args) {
     static struct option long_options[] = {
-        {"input",       required_argument,  0,  'i' },
-        {"output",      required_argument,  0,  'o' },
-        {"help",        no_argument,        0,  'h' },
-        {0,             0,                  0,   0 }
+        {"filename",        required_argument,  0,  'f' },
+        {"time-limit",      required_argument,  0,  't' },
+        {"memory-limit",    required_argument,  0,  'm' },
+        {"cores",           required_argument,  0,  'c' },
+        {"phrase",          required_argument,  0,  'p' },
+        {"help",            no_argument,        0,  'h' },
+        {0,                 0,                  0,   0 }
     };
 
-    std::string input;
-    std::string output;
-
+    TArgs arguments;
     int option_index = 0;
     while (
-        int c = getopt_long(argn, args, "i:o:?:h", long_options, &option_index)
+        int c = getopt_long(argn, args, "f:t:m:c:p:h:?", long_options, &option_index)
     ) {
         if (c == -1) {
             break;
-        } else if (c == 'i') {
-            if (!optarg) {
-                throw ArgparseException("empty value for option \'i\'");
-            }
-            input = optarg;
-        } else if (c == 'o') {
+        } else if (c == 'f') {
             if (!optarg) {
                 throw ArgparseException("empty value for option \'o\'");
             }
-            output = optarg;
+            arguments.Filenames.push_back(optarg);
+        } else if (c == 't') {
+            if (!optarg) {
+                throw ArgparseException("empty value for option \'o\'");
+            }
+            arguments.TimeLimit = std::stoi(optarg);
+        } else if (c == 'm') {
+            if (!optarg) {
+                throw ArgparseException("empty value for option \'o\'");
+            }
+            arguments.MemoryLimit = std::stoi(optarg);
+        } else if (c == 'c') {
+            if (!optarg) {
+                throw ArgparseException("empty value for option \'o\'");
+            }
+            arguments.Cores = std::stoi(optarg);
+        } else if (c == 'p') {
+            if (!optarg) {
+                throw ArgparseException("empty value for option \'o\'");
+            }
+            arguments.PhraseOfPower.push_back(optarg);
         } else if (c == 'h' || c == '?') {
             std::cerr << "Usage:\n"
-                << " -i, --input : Input file\n"
-                << " -o, --output : Output file\n"
-                << " -h, -?, --help : Print this help\n"
+                " -f  FILENAME    File containing JSON encoded input\n"
+                " -t  NUMBER  Time limit, in seconds, to produce output\n"
+                " -m  NUMBER  Memory limit, in megabytes, to produce output\n"
+                " -c  NUMBER  Number of processor cores available\n"
+                " -p  STRING  Phrase of power\n"
+                " -h, -?, --help : Print this help\n"
             ;
-            return;
+            break;
         } else {
             if (0 != opterr) {
                 throw ArgparseException();
             }
         }
     };
+    return arguments;
 }
 
 int main(int argn, char** args) {
