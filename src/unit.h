@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vector>
-
 #include "move_operations.h"
 #include "segment.h"
+
+#include <cstddef>
+#include <vector>
 
 class TUnit {
 public:

@@ -13,8 +13,7 @@ void TBoard::LockCell(size_t row, size_t column) {
 }
 
 void TBoard::SetCellStatus(size_t row, size_t column, Status newStatus) {
-    auto& status = Cells.at(row).at(column);
-    status = newStatus;
+    CellsStatuses.at(row).at(column) = newStatus;
 }
 
 void TBoard::UnlockCell(size_t row, size_t column) {
