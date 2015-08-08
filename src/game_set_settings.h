@@ -1,21 +1,24 @@
 #pragma once
 
+#include <vector>
+
+#include "unit.h"
+
 class TGameSetSettings {
 public:
     explicit TGameSetSettings() {}
 
     using TUnitOrder = std::vector<TUnit>;
     using TIterator = TUnitOrder::iterator;
+    using TConstIterator = TUnitOrder::const_iterator;
 
     TIterator begin();
-    TIterator begin() const;
+    TConstIterator begin() const;
 
     TIterator end();
-    TIterator end() const;
+    TConstIterator end() const;
 
-    void Push(const TUnit&);
-
-    TUnit Pop();
+    void Push(TUnit&&);
 
 private:
     TUnitOrder Units;
