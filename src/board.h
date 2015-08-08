@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 class TBoard {
 public:
     TBoard(size_t rows, size_t columns);
