@@ -16,17 +16,28 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
     TSegment::Coordinate columnDelta = 0;
 
     if (direction == EMoveOperations::SLIDE_EAST) {
-        rowDelta = 1;
+        columnDelta = 1;
     }
     else if (direction == EMoveOperations::SLIDE_WEST) {
-        rowDelta = -1;
+        columnDelta = -1;
     }
     else if (direction == EMoveOperations::SLIDE_SOUTHEAST) {
-        rowDelta = 1;
-        columnDelta = 1;
+        if (GetRow() % 2 == 0) {
+            rowDelta = 1;
+        }
+        else {
+            rowDelta = 1;
+            columnDelta = 1;
+        }
     }
     else if (direction == EMoveOperations::SLIDE_SOUTHWEST) {
-        columnDelta = 1;
+        if (GetRow() % 2 == 0) {
+            rowDelta = 1;
+            columnDelta = -1;
+        }
+        else {
+            rowDelta = 1;
+        }
     }
 
     return TSegment(Row + rowDelta, Column + columnDelta);
