@@ -11,14 +11,19 @@ public:
 
     bool CellIsLocked(size_t row, size_t column) const;
 
+    size_t CollapseRows();
+
 private:
-    using TRow = std::vector<bool>;
-    using TCells = std::vector<TRow>;
+    using Status = bool;
+    using TStatusRow = std::vector<Status>;
+    using TStatusCells = std::vector<TStatusRow>;
 
-    static bool CELL_IS_LOCKED;
-    static bool CELL_IS_UNLOCKED;
+    static const Status CELL_IS_LOCKED;
+    static const Status CELL_IS_UNLOCKED;
 
-    void SetCellStatus(size_t row, size_t column, bool newStatus);
+    void SetCellStatus(size_t row, size_t column, Status newStatus);
 
-    TCells CellsStatuses;
+    static bool RowIsFullyLocked(const TStatusRow& row) const;
+
+    TStatusCells Cells;
 };
