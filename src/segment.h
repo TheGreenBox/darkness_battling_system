@@ -1,5 +1,7 @@
 #pragma once
 
+#include "move_operations.h"
+
 class TSegment {
 public:
     TSegment() = delete;
