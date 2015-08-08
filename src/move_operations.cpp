@@ -10,12 +10,24 @@ bool IsSlideOperation(EMoveOperations operation) {
         case EMoveOperations::SLIDE_SOUTHEAST:
         case EMoveOperations::SLIDE_SOUTHWEST: {
             ret = true;
+            break;
         }
+        default: {}
     }
 
     return ret;
 }
 
 bool IsRotateOperation(EMoveOperations operation) {
-    return IsValidOperation(operation) && !IsSlideOperation(operation);
+    bool ret = false;
+    switch (operation) {
+        case EMoveOperations::ROTATE_CLOCKWISE:
+        case EMoveOperations::ROTATE_ANTI_CLOCKWISE: {
+            ret = true;
+            break;
+        }
+        default: {}
+    }
+
+    return ret;
 }
