@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "move_operations.h"
 #include "segment.h"
 
 class TUnit {
