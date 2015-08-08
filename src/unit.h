@@ -23,7 +23,7 @@ public:
     TUnit Rotate(EMoveOperations direction) const;
 
 private:
-    TSegments MoveSegments(EMoveOperations direction) const;
+    TSegments SlideSegments(EMoveOperations direction) const;
     TSegments RotateSegments(EMoveOperations direction) const;
 
     TSegment Pivot;

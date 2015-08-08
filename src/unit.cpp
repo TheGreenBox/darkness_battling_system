@@ -1,15 +1,17 @@
 #include "unit.h"
 
+#include "segment.h"
+
 TUnit::TUnit(const TSegment& pivot, TSegments&& segments)
     : Pivot(pivot)
     , Segments(std::move(segments)) {}
 
 TUnit TUnit::Slide(EMoveOperations direction) const {
-    TSegment newPivot = pivot.Slide(direction);
+    TSegment newPivot = Pivot.Slide(direction);
     return TUnit(newPivot, SlideSegments(direction));
 }
 
-TSegments TUnit::SlideSegments(EMoveOperations direction) const {
+TUnit::TSegments TUnit::SlideSegments(EMoveOperations direction) const {
     TSegments ret;
     ret.reserve(Segments.size());
     for (const TSegment& segment : Segments) {
@@ -21,14 +23,14 @@ TSegments TUnit::SlideSegments(EMoveOperations direction) const {
 }
 
 TUnit TUnit::Rotate(EMoveOperations direction) const {
-    return TUnit(pivot, RotateSegments(direction));
+    return TUnit(Pivot, RotateSegments(direction));
 }
 
-TSegments TUnit::RotateSegments(EMoveOperations direction) const {
+TUnit::TSegments TUnit::RotateSegments(EMoveOperations direction) const {
     TSegments ret;
     ret.reserve(Segments.size());
     for (const TSegment& segment : Segments) {
-        TSegment rotatedSegment = segment.RotateAround(pivot, direction);
+        TSegment rotatedSegment = segment.RotateAround(Pivot, direction);
         ret.push_back(rotatedSegment);
     }
 
