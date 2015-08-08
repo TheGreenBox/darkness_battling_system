@@ -1,3 +1,5 @@
+#include "move_operations.h"
+
 bool IsValidOperation(EMoveOperations operation) {
     return operation < EMoveOperations::COUNT;
 }
