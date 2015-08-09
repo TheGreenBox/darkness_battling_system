@@ -2,6 +2,7 @@
 
 #include "game_set_settings.h"
 #include "board.h"
+#include "types.h"
 
 #include <lib/json/json/json-forwards.h>
 
@@ -22,7 +23,6 @@ private:
     std::vector<TUnit> Units;
     size_t SourceLength;
 
-    using TSeed = uint64_t;;
     std::deque<TSeed> Seeds;
 };
 

@@ -2,7 +2,6 @@
 
 #include <lib/json/json/json.h>
 
-#include <cstdint>
 
 TGameSessionRules::TGameSessionRules(std::istream& jsonIn)
     : InitialBoard(0, 0)

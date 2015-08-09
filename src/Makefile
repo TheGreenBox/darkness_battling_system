@@ -12,6 +12,7 @@ app:
 	../lib/json/jsoncpp.cpp \
 	game_set_settings.cpp \
 	move_operations.cpp \
+	output_format.cpp \
 	segment.cpp \
 	unit.cpp
 

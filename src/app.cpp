@@ -4,6 +4,7 @@
  */
 #include "exception.h"
 #include "game_session_rules.h"
+#include "output_format.h"
 
 #include <lib/json/json/json.h>
 
@@ -18,6 +19,7 @@
 
 struct TArgs {
     std::vector<std::string> Filenames;
+    std::vector<size_t> ProblemIds;
     std::vector<std::string> PhraseOfPower;
     std::string DebugCmd;
     size_t TimeLimit = 0;
@@ -28,6 +30,7 @@ struct TArgs {
 TArgs argparse(int argn, char** args) {
     static struct option long_options[] = {
         {"filename",        required_argument,  0,  'f' },
+        {"problems-ids",    required_argument,  0,  'i' },
         {"time-limit",      required_argument,  0,  't' },
         {"memory-limit",    required_argument,  0,  'm' },
         {"cores",           required_argument,  0,  'c' },
@@ -40,7 +43,7 @@ TArgs argparse(int argn, char** args) {
     TArgs arguments;
     int option_index = 0;
     while (
-        int c = getopt_long(argn, args, "f:t:m:c:p:h:d:?", long_options, &option_index)
+        int c = getopt_long(argn, args, "f:i:t:m:c:p:h:d:?", long_options, &option_index)
     ) {
         if (c == -1) {
             break;
@@ -58,12 +61,13 @@ TArgs argparse(int argn, char** args) {
             arguments.DebugCmd = optarg;
         } else if (c == 'h' || c == '?') {
             std::cerr << "Usage:\n"
-                " -f  FILENAME    File containing JSON encoded input\n"
-                " -t  NUMBER  Time limit, in seconds, to produce output\n"
-                " -m  NUMBER  Memory limit, in megabytes, to produce output\n"
-                " -c  NUMBER  Number of processor cores available\n"
-                " -p  STRING  Phrase of power\n"
-                " -d  STRING  Debug mode\n"
+                " -f  FILENAME  File containing JSON encoded input\n"
+                " -i  ID        The 'id' of the game configuration\n"
+                " -t  NUMBER    Time limit, in seconds, to produce output\n"
+                " -m  NUMBER    Memory limit, in megabytes, to produce output\n"
+                " -c  NUMBER    Number of processor cores available\n"
+                " -p  STRING    Phrase of power\n"
+                " -d  STRING    Debug mode\n"
                 " -h, -?, --help : Print this help\n"
             ;
             break;
