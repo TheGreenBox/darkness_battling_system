@@ -5,13 +5,16 @@
 #include "exception.h"
 #include "game_session_rules.h"
 
+#include <lib/json/json/json.h>
+
 #include <getopt.h>
 
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <fstream>
+#include <memory>
 
 struct TArgs {
     std::vector<std::string> Filenames;
@@ -51,7 +54,7 @@ TArgs argparse(int argn, char** args) {
             arguments.Cores = std::stoi(optarg);
         } else if (c == 'p') {
             arguments.PhraseOfPower.push_back(optarg);
-        } else if (c == 'p') {
+        } else if (c == 'd') {
             arguments.DebugCmd = optarg;
         } else if (c == 'h' || c == '?') {
             std::cerr << "Usage:\n"
@@ -84,19 +87,25 @@ int main(int argn, char** args) {
             if (arguments.DebugCmd == "src") {
                 auto gameSet = session.NextSet();
                 for (const auto& u : gameSet) {
+                    Json::Value jsonRec(Json::objectValue);
+                    jsonRec["members"] = Json::arrayValue;
                     for (const auto& seg : u.GetSegments()) {
-                        std::cout
-                            << "{ " << seg.GetRow()
-                            << ", " << seg.GetColumn()
-                            << " }, "
-                        ;
+                        Json::Value jsonMemmber(Json::objectValue);
+                        jsonMemmber["c"] = seg.GetColumn();
+                        jsonMemmber["r"] = seg.GetRow();
+                        jsonRec["members"].append(jsonMemmber);
                     }
-                    std::cout
-                        << " Pivot: { " << u.GetPivot().GetRow()
-                        << ", " << u.GetPivot().GetColumn()
-                        << " }, "
-                    ;
-                    std::cout << '\n';
+                    Json::Value jsonPivot(Json::objectValue);
+                    jsonPivot["c"] = u.GetPivot().GetColumn();
+                    jsonPivot["r"] = u.GetPivot().GetRow();
+                    jsonRec["pivot"] = jsonPivot;
+
+                    Json::StreamWriterBuilder builder;
+                    builder["indentation"] = "";  // or whatever you like
+                    std::unique_ptr<Json::StreamWriter> writer(
+                        builder.newStreamWriter());
+                    writer->write(jsonRec, &std::cout);
+                    std::cout << std::endl;  // add lf and flush
                 }
             }
         }
