@@ -137,7 +137,7 @@ void Build(const TBoard& board, const TUnit& cunit) {
     Graph.resize(rows, TSurfaceRow(columns));
 
     TSegment scanStart(-reserve, -reserve);
-    // TODO: teleportate unit to zero(?) point
+    unit.TeleportTo(Coords::ColRowPoint(-reserve, -reserve));
 
     for (size_t row = 0; row < rows; ++row) {
         for (size_t column = 0; column < columns; ++column) {
@@ -152,7 +152,11 @@ void Build(const TBoard& board, const TUnit& cunit) {
             }
             Unit.Move(EMoveOperations::SLIDE_EAST);
         }
-        // TODO: teleportate unit to next row start point
+        if (row % 2 != 0) {
+            Unit.Move(EMoveOperations::SLIDE_SOUTHEAST);
+        } else {
+            Unit.Move(EMoveOperations::SLIDE_SOUTHWEST);
+        }
     }
 }
 

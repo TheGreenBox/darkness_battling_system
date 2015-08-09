@@ -85,5 +85,7 @@ private:
     using TMatrix = std::vector<TMatrixRow>;
 
     TMatrix Graph;
+    Coords::ColRowPoint::Coordinate RowShift;
+    Coords::ColRowPoint::Coordinate ColumnShift;
 };
 
