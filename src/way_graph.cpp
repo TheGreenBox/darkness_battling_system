@@ -54,11 +54,11 @@ TWayGraph TWayGraph::Clone() const {
 }
 
 void
-TWayGraph::FindPositionWithMinMetrics(
+TWayGraph::FindPositionWithMaxMetrics(
     TUnit& unit,
     size_t& fromDirection
 ) {
-    int minMetrics = std::numeric_limits<int>::max();
+    int minMetrics = std::numeric_limits<int>::min();
     size_t minRow = -1;
     size_t minCol = -1;
     size_t minDir = -1;
@@ -70,7 +70,7 @@ TWayGraph::FindPositionWithMinMetrics(
         for (size_t column = 0; column < columns; ++column) {
             for (size_t turn = 0; turn < TurnDirections; ++turn) {
                 int metrics = Graph.at(row).at(column).at(turn).Metrics;
-                if (metrics < minMetrics) {
+                if (metrics > minMetrics) {
                     minMetrics = metrics;
                     minRow = row;
                     minCol = column;
