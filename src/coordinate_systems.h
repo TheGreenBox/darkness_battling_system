@@ -14,22 +14,6 @@ struct TColRowPoint {
     TCoordinate Row;
 };
 
-struct TStraightColRowPoint {
-    using TCoordinate = TColRowPoint::TCoordinate;
-
-    TStraightColRowPoint(TCoordinate column, TCoordinate row);
-
-    bool operator==(const TStraightColRowPoint&) const;
-    bool operator!=(const TStraightColRowPoint&) const;
-
-    TCoordinate Column;
-    TCoordinate Row;
-};
-
-TStraightColRowPoint Straighten(const TColRowPoint&);
-TColRowPoint Unstraighten(const TStraightColRowPoint&);
-
-
 struct THexPoint {
     using TCoordinate = TColRowPoint::TCoordinate;
 
@@ -44,9 +28,6 @@ struct THexPoint {
 };
 
 THexPoint ToHex(const TColRowPoint&);
-THexPoint ToHex(const TStraightColRowPoint&);
-
-template <typename RetType>
-RetType FromHex(const THexPoint&);
+TColRowPoint FromHex(const THexPoint&);
 
 } // namespace Coords
