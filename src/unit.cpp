@@ -57,6 +57,11 @@ const TUnit::TSegments& TUnit::GetSegments() const {
     return Segments;
 }
 
+const TSegment& TUnit::GetPivot() const {
+    return Pivot;
+}
+
 TUnit TUnit::Clone() const {
     return TUnit(Pivot, TSegments(Segments));
 }
+

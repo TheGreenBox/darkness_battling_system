@@ -26,6 +26,7 @@ public:
     TUnit Clone() const;
 
     const TSegments& GetSegments() const;
+    const TSegment& GetPivot() const;
 
 private:
     TUnit Slide(EMoveOperations direction) const;
