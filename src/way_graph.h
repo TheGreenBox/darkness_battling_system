@@ -27,12 +27,27 @@ public:
 
     TWayGraph Clone() const;
 
-    std::vector<EMoveOperations>
+    using TWay = std::vector<EMoveOperations>;
+    using TWays = std::vector<TWay>;
+
+    TWays
     FindWay(
-        const TSegment& from,
-        const TSegment& to
+        const Coords::TColRowPoint& from,
+        size_t fromDirection,
+        const Coords::TColRowPoint& to,
+        size_t toDirection
     );
 
+    bool
+    CheckNode(
+        TCoordinate column,
+        TCoordinate row,
+        size_t direction
+    ) const;
+
+    std::string ToString() const;
+
+private:
     enum class EColor {
         WHITE,
         GREY,
@@ -45,16 +60,6 @@ public:
         bool Available = false;
     };
 
-    bool
-    CheckNode(
-        TCoordinate column,
-        TCoordinate row,
-        size_t direction
-    ) const;
-
-    std::string ToString() const;
-
-private:
     static const size_t TurnDirections = 6;
     using TVertical = std::array<TNode, TurnDirections>;
     using TMatrixRow = std::vector<TVertical>;
@@ -66,11 +71,32 @@ private:
 
     size_t GetColumnIndexFromCoordinate(TCoordinate column) const;
 
-    TNode& GetNode(TCoordinate column, TCoordinate row, size_t direction);
-    const TNode&  GetNode(TCoordinate column, TCoordinate row, size_t direction) const;
+    void Dfs(const TSegment& point, size_t direction);
+
+    TNode&
+    GetNode(
+        TCoordinate column,
+        TCoordinate row,
+        size_t direction
+    );
+
+    const TNode&
+    GetNode(
+        TCoordinate column,
+        TCoordinate row,
+        size_t direction
+    ) const;
 
     TMatrix Graph;
+
     Coords::TColRowPoint::TCoordinate RowShift;
     Coords::TColRowPoint::TCoordinate ColumnShift;
+
+    TWays AllWays;
+    TWay CurrentWay;
+    TSegment FinishPoint;
+    size_t FinishDirection;
+
+    bool IsValid(const Coords::TColRowPoint&) const;
 };
 

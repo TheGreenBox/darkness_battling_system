@@ -53,11 +53,45 @@ void TestBuildGraph() {
 }
 
 void TestFindWay() {
+    TBoard board(3, 4);
+    /*  OOO
+        XOX
+        OOO */
+    board.LockCell(0, 1);
+    board.LockCell(2, 1);
+    board.LockCell(2, 3);
+
+    TUnit::TSegments segments = {
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(1, 0)),
+    };
+
+    /*  xX */
+    TUnit unit(
+        TSegment(Coords::TColRowPoint(0, 0)),
+        std::move(segments)
+    );
+
+    TWayGraph graph(1, 1);
+    graph.Build(board, unit);
+    std::string graphText = graph.ToString();
+    auto ways = graph.FindWay(
+        Coords::TColRowPoint(0, 0), 0,
+        Coords::TColRowPoint(1, 2), 5
+    );
+
+    for (const auto& way : ways) {
+        for (const auto& cmd : way) {
+            std::cout << int(cmd) << " ";
+        }
+        std::cout << "\n";
+    }
 }
 
 int main() {
     try {
-        TestBuildGraph();
+        //TestBuildGraph();
+        TestFindWay();
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         return 1;
