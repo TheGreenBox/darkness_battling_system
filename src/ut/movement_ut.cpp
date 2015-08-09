@@ -106,6 +106,28 @@ void Test4() {
     ExpectEqual(result, expected, GenerateComment(result, expected));
 }
 
+void TestReversability() {
+    for (Coords::TColRowPoint::TCoordinate col = -10; col < 10; ++col) {
+        for (Coords::TColRowPoint::TCoordinate row = -10; row < 10; ++row) {
+            TSegment pivot(Coords::TColRowPoint(col, row));
+            TSegment origin(Coords::TColRowPoint(2 * col, 2 * row));
+
+            TSegment rotated = origin.RotateAround(
+                pivot.GetPosition(),
+                EMoveOperations::ROTATE_CLOCKWISE
+            );
+
+            TSegment rotatedBack = rotated.RotateAround(
+                pivot.GetPosition(),
+                EMoveOperations::ROTATE_ANTI_CLOCKWISE
+            );
+
+
+            ExpectEqual(origin, rotatedBack);
+        }
+    }
+}
+
 } // namespace Rotation
 
 namespace Slide {
@@ -180,6 +202,7 @@ int main() {
     Rotation::Test2();
     Rotation::Test3();
     Rotation::Test4();
+    Rotation::TestReversability();
 
     Slide::Test1();
     Slide::Test2();

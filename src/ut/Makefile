@@ -45,6 +45,7 @@ way_graph_ut:
 	../move_operations.cpp \
 	../segment.cpp \
 	../unit.cpp \
+	../board_metrics.cpp \
 	../way_graph.cpp
 
 movement_ut:
