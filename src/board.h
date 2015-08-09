@@ -1,5 +1,8 @@
 #pragma once
 
+#include "segment.h"
+#include "unit.h"
+
 #include <cstddef>
 #include <vector>
 #include <string>
@@ -13,6 +16,7 @@ public:
     void UnlockCell(size_t row, size_t column);
 
     bool CellIsLocked(size_t row, size_t column) const;
+    bool UnitWillFitInside(const TUnit& unit) const;
 
     size_t CollapseRows();
 
@@ -33,6 +37,8 @@ private:
         TStatusCells::iterator searchStart
     );
     void ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter);
+
+    bool SegmentPosIsOccupied(const TSegment& segment) const;
 
     static bool RowIsFullyLocked(const TStatusRow& row);
 

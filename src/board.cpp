@@ -70,6 +70,20 @@ bool TBoard::RowIsFullyLocked(const TStatusRow& row) {
     return result == row.end();
 }
 
+bool TBoard::UnitWillFitInside(const TUnit& unit) const {
+    for (const auto& segment : unit.GetSegments()) {
+        if (SegmentPosIsOccupied(segment)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TBoard::SegmentPosIsOccupied(const TSegment& segment) const {
+    return CellIsLocked(segment.GetRow(), segment.GetColumn());
+}
+
 std::string TBoard::ToString() const {
     const size_t borderLen = Cells.empty() ? 1 : Cells.front().size();
     const std::string border(borderLen, '-');
