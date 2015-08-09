@@ -3,6 +3,7 @@
 #include "exception.h"
 
 #include <iostream>
+#include <limits>
 
 TWayGraph::TWayGraph(
     Coords::TColRowPoint::TCoordinate rowShift,
@@ -50,6 +51,38 @@ TWayGraph TWayGraph::Clone() const {
     TWayGraph copy(RowShift, ColumnShift);
     copy.Graph = Graph;
     return std::move(copy);
+}
+
+void
+TWayGraph::FindPositionWithMinMetrics(
+    Coords::TColRowPoint& point,
+    size_t& fromDirection
+) {
+    int minMetrics = std::numeric_limits<int>::max();
+    size_t minRow = -1;
+    size_t minCol = -1;
+    size_t minDir = -1;
+
+    size_t rows = Graph.size();
+    size_t columns = Graph.front().size();
+
+    for (size_t row = 0; row < rows; ++row) {
+        for (size_t column = 0; column < columns; ++column) {
+            for (size_t turn = 0; turn < TurnDirections; ++turn) {
+                int metrics = Graph.at(row).at(column).at(turn).Metrics;
+                if (metrics < minMetrics) {
+                    minMetrics = metrics;
+                    minRow = row;
+                    minCol = column;
+                    minDir = turn;
+                }
+            }
+        }
+    }
+    point.Column = minCol;
+    point.Row = minRow;
+    fromDirection = minDir;
+    return;
 }
 
 TWayGraph::TWays

@@ -30,6 +30,12 @@ public:
     using TWay = std::vector<EMoveOperations>;
     using TWays = std::vector<TWay>;
 
+    void
+    FindPositionWithMinMetrics(
+        Coords::TColRowPoint& point,
+        size_t& fromDirection
+    );
+
     TWays
     FindWay(
         const Coords::TColRowPoint& from,
