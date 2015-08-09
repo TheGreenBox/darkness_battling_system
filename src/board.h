@@ -1,5 +1,6 @@
 #pragma once
 
+#include "coordinate_systems.h"
 #include "segment.h"
 #include "unit.h"
 
@@ -48,44 +49,5 @@ private:
     static bool RowIsFullyLocked(const TStatusRow& row);
 
     TStatusCells Cells;
-};
-
-class TWayGraph {
-public:
-    TWayGraph(const TUnit& unit);
-    TWayGraph(size_t rows, size_t columns, const TUnit& unit);
-
-    TWayGraph() = delete;
-    TWayGraph(const TWayGraph&) = delete;
-
-    void Build(const TBoard& board, const TUnit& unit);
-
-    enum class EColor {
-        WHITE,
-        GREY,
-        BLACK
-    };
-
-    struct TNode {
-        int Metrics = -1;
-        EColor Color = EColor::WHITE;  // for dfs algo
-        bool Occupied = true;
-
-        operator bool() {
-            return Occupied;
-        }
-    };
-
-    TWayGraph clone() const;
-
-private:
-    static const size_t TurnDirections = 6;
-    using TVertical = std::array<TNode, TurnDirections>;
-    using TMatrixRow = std::vector<TVertical>;
-    using TMatrix = std::vector<TMatrixRow>;
-
-    TMatrix Graph;
-    Coords::ColRowPoint::Coordinate RowShift;
-    Coords::ColRowPoint::Coordinate ColumnShift;
 };
 
