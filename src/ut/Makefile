@@ -4,7 +4,7 @@ CC=g++
 LIB=
 FLAGS=-std=c++11 -Wall -I ../.. -I .. -I .
 
-ut: game_session_rules_ut board_ut
+ut: game_session_rules_ut board_ut coordinate_systems_ut
 	${PRODUCT}/game_session_rules_ut
 	${PRODUCT}/board_ut
 	${PRODUCT}/coordinate_systems_ut
