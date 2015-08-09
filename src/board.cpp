@@ -7,27 +7,27 @@
 const TBoard::Status TBoard::CELL_IS_LOCKED = true;
 const TBoard::Status TBoard::CELL_IS_UNLOCKED = false;
 
-TBoard::TBoard(size_t rows, size_t columns)
+TBoard::TBoard(size_t columns, size_t rows)
     : Cells(rows, TStatusRow(columns, CELL_IS_UNLOCKED)) {}
 
-void TBoard::LockCell(size_t row, size_t column) {
-    SetCellStatus(row, column, CELL_IS_LOCKED);
+void TBoard::LockCell(size_t column, size_t row) {
+    SetCellStatus(column, row, CELL_IS_LOCKED);
 }
 
-void TBoard::SetCellStatus(size_t row, size_t column, Status newStatus) {
+void TBoard::SetCellStatus(size_t column, size_t row, Status newStatus) {
     Cells.at(row).at(column) = newStatus;
 }
 
-void TBoard::UnlockCell(size_t row, size_t column) {
-    SetCellStatus(row, column, CELL_IS_UNLOCKED);
+void TBoard::UnlockCell(size_t column, size_t row) {
+    SetCellStatus(column, row, CELL_IS_UNLOCKED);
 }
 
-bool TBoard::CellIsLocked(size_t row, size_t column) const {
+bool TBoard::CellIsLocked(size_t column, size_t row) const {
     return Cells.at(row).at(column) == CELL_IS_LOCKED;
 }
 
-bool TBoard::IsValidCell(size_t row, size_t column) const {
-    return row < Cells.size() && column < GetColumnsNum();
+bool TBoard::IsValidCell(size_t column, size_t row) const {
+    return column < GetColumnsNum() && row < Cells.size();
 }
 
 size_t TBoard::CollapseRows() {
@@ -89,15 +89,15 @@ bool TBoard::UnitWillFitInside(const TUnit& unit) const {
 bool TBoard::SegmentPosIsValid(const TSegment& segment) const {
     const auto& position = segment.GetPosition();
 
-    bool posIsNonNegative = position.Row >= 0 && position.Column >= 0;
-    bool posIsInBoardBorders = IsValidCell(position.Row, position.Column);
+    bool posIsNonNegative = position.Column >= 0 && position.Row >= 0;
+    bool posIsInBoardBorders = IsValidCell(position.Column, position.Row);
 
     return posIsNonNegative && posIsInBoardBorders;
 }
 
 bool TBoard::SegmentPosIsLocked(const TSegment& segment) const {
     const auto& position = segment.GetPosition();
-    return CellIsLocked(position.Row, position.Column);
+    return CellIsLocked(position.Column, position.Row);
 }
 
 size_t TBoard::GetColumnsNum() const {

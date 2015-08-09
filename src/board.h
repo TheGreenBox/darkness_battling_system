@@ -10,12 +10,12 @@
 class TBoard {
 public:
     TBoard() = delete;
-    TBoard(size_t rows, size_t columns);
+    TBoard(size_t columns, size_t rows);
 
-    void LockCell(size_t row, size_t column);
-    void UnlockCell(size_t row, size_t column);
+    void LockCell(size_t column, size_t row);
+    void UnlockCell(size_t column, size_t row);
 
-    bool CellIsLocked(size_t row, size_t column) const;
+    bool CellIsLocked(size_t column, size_t row) const;
     bool UnitWillFitInside(const TUnit& unit) const;
 
     size_t CollapseRows();
@@ -30,8 +30,8 @@ private:
     static const Status CELL_IS_LOCKED;
     static const Status CELL_IS_UNLOCKED;
 
-    void SetCellStatus(size_t row, size_t column, Status newStatus);
-    bool IsValidCell(size_t row, size_t column) const;
+    void SetCellStatus(size_t column, size_t row, Status newStatus);
+    bool IsValidCell(size_t column, size_t row) const;
 
     TStatusCells::iterator
     NextLockedRow(
