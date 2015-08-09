@@ -100,6 +100,31 @@ bool TBoard::SegmentPosIsLocked(const TSegment& segment) const {
     return CellIsLocked(position.Column, position.Row);
 }
 
+TUnit TBoard::TeleportUnitToSpawnPosition(const TUnit& unit) const {
+    Coords::TColRowPoint::TCoordinate left =
+        std::numeric_limits<Coords::TColRowPoint::TCoordinate>::max();
+    Coords::TColRowPoint::TCoordinate right =
+        std::numeric_limits<Coords::TColRowPoint::TCoordinate>::min();
+
+    for (const auto& segment : unit.GetSegments()) {
+        if (segment.GetPosition().Column > right) {
+            right = segment.GetPosition().Column;
+        }
+        if (segment.GetPosition().Column < left) {
+            left = segment.GetPosition().Column;
+        }
+    }
+    Coords::TColRowPoint::TCoordinate middle = (right - left) / 2;
+    Coords::TColRowPoint::TCoordinate shift = GetColumnCount()/2 - middle;
+
+    return unit.TeleportTo(
+        Coords::TColRowPoint(
+            unit.GetPivot().GetPosition().Column + shift,
+            unit.GetPivot().GetPosition().Row
+        )
+    );
+}
+
 size_t TBoard::GetColumnCount() const {
     return Cells.empty() ? 0 : Cells.front().size();
 }

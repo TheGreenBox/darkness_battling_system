@@ -1,4 +1,5 @@
 #include "board.h"
+#include "exception.h"
 
 #include <iostream>
 
@@ -50,6 +51,32 @@ void Test3() {
     std::cout << board.ToString() << std::endl;
 }
 
+void TestSpawnTeleport() {
+    std::cout << "TEST EMPTY\n";
+    TBoard board(8, 8);
+
+    TUnit::TSegments segments = {
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(1, 0)),
+        TSegment(Coords::TColRowPoint(1, 1)),
+        TSegment(Coords::TColRowPoint(2, 1)),
+    };
+
+    /*  xX */
+    TUnit unit(
+        TSegment(Coords::TColRowPoint(1, 0)),
+        std::move(segments)
+    );
+    auto teleported = board.TeleportUnitToSpawnPosition(unit);
+    if (teleported.GetPivot().GetPosition().Column != 4) {
+        throw TException("TestSpawnTeleport error")
+            << __FILE__ << ":" << __LINE__
+            << " :\n" << teleported.GetPivot().GetPosition().Column << "\n"
+            << "expected: 4"
+        ;
+    }
+}
+
 void EmptyTest() {
     std::cout << "TEST EMPTY\n";
     TBoard board(0, 0);
@@ -67,5 +94,6 @@ int main() {
     Test2();
     Test3();
     EmptyTest();
+    TestSpawnTeleport();
     return 0;
 }
