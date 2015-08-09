@@ -63,32 +63,20 @@ TSegment::RotateAround(
     EMoveOperations direction
 ) const {
     static const auto shiftCoordsLeft
-        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
+        = [](const Coords::THexPoint& p) -> Coords::THexPoint {
         //    x y z
         // -> y z x
-        Coords::THexPoint::TCoordinate y = point.X;
-        Coords::THexPoint::TCoordinate z = point.Y;
-        Coords::THexPoint::TCoordinate x = point.Z;
-
-        return Coords::THexPoint(x, y, z);
+        return Coords::THexPoint(p.Y, p.Z, p.X);
     };
     static const auto shiftCoordsRight
-        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
+        = [](const Coords::THexPoint& p) -> Coords::THexPoint {
         //    x y z
         // -> z x y
-        Coords::THexPoint::TCoordinate z = point.X;
-        Coords::THexPoint::TCoordinate x = point.Y;
-        Coords::THexPoint::TCoordinate y = point.Z;
-
-        return Coords::THexPoint(x, y, z);
+        return Coords::THexPoint(p.Z, p.X, p.Y);
     };
     static const auto invertSigns
-        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
-        Coords::THexPoint::TCoordinate x = -1 * point.X;
-        Coords::THexPoint::TCoordinate y = -1 * point.Y;
-        Coords::THexPoint::TCoordinate z = -1 * point.Z;
-
-        return Coords::THexPoint(x, y, z);
+        = [](const Coords::THexPoint& p) -> Coords::THexPoint {
+        return Coords::THexPoint(-1* p.X, -1 * p.Y, -1 * p.Z);
     };
 
     Coords::THexPoint hexPivot = Coords::ToHex(pivot);
@@ -103,17 +91,15 @@ TSegment::RotateAround(
     Coords::THexPoint newHexSelfLocal = hexSelfLocal;
     switch (direction) {
         case EMoveOperations::ROTATE_CLOCKWISE: {
-            // newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
-            newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
-            break;
-        }
-        case EMoveOperations::ROTATE_ANTI_CLOCKWISE: {
-            // newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
             newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
             break;
         }
+        case EMoveOperations::ROTATE_ANTI_CLOCKWISE: {
+            newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
+            break;
+        }
         default: {
-            throw TException("Invalid rotate operation recieved in ")
+            throw TException("Invalid rotation operation recieved in ")
                 << __FILE__ << ":" << __LINE__;
         }
     }
