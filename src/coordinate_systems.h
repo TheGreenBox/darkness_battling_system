@@ -2,51 +2,51 @@
 
 namespace Coords {
 
-struct ColRowPoint {
-    using Coordinate = int;
+struct TColRowPoint {
+    using TCoordinate = int;
 
-    ColRowPoint(Coordinate column, Coordinate row);
+    TColRowPoint(TCoordinate column, TCoordinate row);
 
-    bool operator==(const ColRowPoint&) const;
-    bool operator!=(const ColRowPoint&) const;
+    bool operator==(const TColRowPoint&) const;
+    bool operator!=(const TColRowPoint&) const;
 
-    Coordinate Column;
-    Coordinate Row;
+    TCoordinate Column;
+    TCoordinate Row;
 };
 
-struct StraightColRowPoint {
-    using Coordinate = ColRowPoint::Coordinate;
+struct TStraightColRowPoint {
+    using TCoordinate = TColRowPoint::TCoordinate;
 
-    StraightColRowPoint(Coordinate column, Coordinate row);
+    TStraightColRowPoint(TCoordinate column, TCoordinate row);
 
-    bool operator==(const StraightColRowPoint&) const;
-    bool operator!=(const StraightColRowPoint&) const;
+    bool operator==(const TStraightColRowPoint&) const;
+    bool operator!=(const TStraightColRowPoint&) const;
 
-    Coordinate Column;
-    Coordinate Row;
+    TCoordinate Column;
+    TCoordinate Row;
 };
 
-StraightColRowPoint Straighten(const ColRowPoint&);
-ColRowPoint Unstraighten(const StraightColRowPoint&);
+TStraightColRowPoint Straighten(const TColRowPoint&);
+TColRowPoint Unstraighten(const TStraightColRowPoint&);
 
 
-struct HexPoint {
-    using Coordinate = ColRowPoint::Coordinate;
+struct THexPoint {
+    using TCoordinate = TColRowPoint::TCoordinate;
 
-    HexPoint(Coordinate x, Coordinate y, Coordinate z);
+    THexPoint(TCoordinate x, TCoordinate y, TCoordinate z);
 
-    bool operator==(const HexPoint&) const;
-    bool operator!=(const HexPoint&) const;
+    bool operator==(const THexPoint&) const;
+    bool operator!=(const THexPoint&) const;
 
-    Coordinate X;
-    Coordinate Y;
-    Coordinate Z;
+    TCoordinate X;
+    TCoordinate Y;
+    TCoordinate Z;
 };
 
-HexPoint ToHex(const ColRowPoint&);
-HexPoint ToHex(const StraightColRowPoint&);
+THexPoint ToHex(const TColRowPoint&);
+THexPoint ToHex(const TStraightColRowPoint&);
 
 template <typename RetType>
-RetType FromHex(const HexPoint&);
+RetType FromHex(const THexPoint&);
 
 } // namespace Coords

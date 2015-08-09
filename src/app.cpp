@@ -95,13 +95,15 @@ int main(int argn, char** args) {
                     jsonRec["members"] = Json::arrayValue;
                     for (const auto& seg : u.GetSegments()) {
                         Json::Value jsonMemmber(Json::objectValue);
-                        jsonMemmber["c"] = seg.GetColumn();
-                        jsonMemmber["r"] = seg.GetRow();
+                        const auto& position = seg.GetPosition();
+                        jsonMemmber["c"] = position.Column;
+                        jsonMemmber["r"] = position.Row;
                         jsonRec["members"].append(jsonMemmber);
                     }
                     Json::Value jsonPivot(Json::objectValue);
-                    jsonPivot["c"] = u.GetPivot().GetColumn();
-                    jsonPivot["r"] = u.GetPivot().GetRow();
+                    const auto& pivotPosisiton = u.GetPivot().GetPosition();
+                    jsonPivot["c"] = pivotPosisiton.Column;
+                    jsonPivot["r"] = pivotPosisiton.Row;
                     jsonRec["pivot"] = jsonPivot;
 
                     Json::StreamWriterBuilder builder;

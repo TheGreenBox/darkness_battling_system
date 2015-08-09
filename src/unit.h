@@ -23,7 +23,7 @@ public:
      * @details Handles EVERY movement operation internally
      */
     TUnit Move(EMoveOperations operation) const;
-    TUnit TeleportTo(const Coords::ColRowPoint& newPivotPos) const;
+    TUnit TeleportTo(const Coords::TColRowPoint& newPivotPos) const;
     TUnit Clone() const;
 
     const TSegments& GetSegments() const;
@@ -35,7 +35,7 @@ private:
 
     TSegments SlideSegments(EMoveOperations direction) const;
     TSegments RotateSegments(EMoveOperations direction) const;
-    TSegments TeleportSegments(const Coords::ColRowPoint& delta) const;
+    TSegments TeleportSegments(const Coords::TColRowPoint& delta) const;
 
     TSegment Pivot;
     TSegments Segments;
