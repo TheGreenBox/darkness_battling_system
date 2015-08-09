@@ -35,6 +35,15 @@ coordinate_systems_ut:
 	coordinate_systems_ut.cpp \
 	../coordinate_systems.cpp
 
+way_graph_ut:
+	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/way_graph_ut \
+	way_graph_ut.cpp \
+	../board.cpp \
+	../coordinate_systems.cpp \
+	../move_operations.cpp \
+	../segment.cpp \
+	../unit.cpp \
+	../way_graph.cpp
 
 clear:
 	rm product -r
