@@ -1,5 +1,7 @@
 #include "output_format.h"
 
+#include <lib/json/json/json.h>
+
 void AnswerFormattedPrint(
     const std::vector<TProblemSolution>& solutions,
     std::ostream& out

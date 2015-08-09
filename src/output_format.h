@@ -1,9 +1,10 @@
-#include "types.h"
+#pragma once
 
-#include <lib/json/json/json.h>
+#include "types.h"
 
 #include <iostream>
 #include <memory>
+#include <vector>
 
 struct TProblemSolution {
     size_t ProblemId;  // The `id` of the game configuration
