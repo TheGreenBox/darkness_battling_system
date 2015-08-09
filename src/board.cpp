@@ -27,7 +27,7 @@ bool TBoard::CellIsLocked(size_t column, size_t row) const {
 }
 
 bool TBoard::IsValidCell(size_t column, size_t row) const {
-    return column < GetColumnsNum() && row < Cells.size();
+    return column < GetColumnCount() && row < Cells.size();
 }
 
 size_t TBoard::CollapseRows() {
@@ -57,7 +57,7 @@ void TBoard::ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter) 
             << __FILE__ << ":" << __LINE__;
     }
 
-    size_t columnsNum = GetColumnsNum();
+    size_t columnsNum = GetColumnCount();
 
     using TReverseIter = std::reverse_iterator<TStatusCells::iterator>;
     // NOTE: reversing iterator makes it to point one element before
@@ -100,12 +100,16 @@ bool TBoard::SegmentPosIsLocked(const TSegment& segment) const {
     return CellIsLocked(position.Column, position.Row);
 }
 
-size_t TBoard::GetColumnsNum() const {
+size_t TBoard::GetColumnCount() const {
     return Cells.empty() ? 0 : Cells.front().size();
 }
 
+size_t TBoard::GetRowCount() const {
+    return Cells.size();
+}
+
 std::string TBoard::ToString() const {
-    const std::string border(GetColumnsNum(), '-');
+    const std::string border(GetColumnCount(), '-');
 
     std::string ret;
 
@@ -122,4 +126,3 @@ std::string TBoard::ToString() const {
 
     return ret;
 }
-

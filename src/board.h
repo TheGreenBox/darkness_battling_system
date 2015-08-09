@@ -24,6 +24,9 @@ public:
 
     std::string ToString() const;
 
+    size_t GetRowCount() const;
+    size_t GetColumnCount() const;
+
 private:
     using Status = bool;
     using TStatusRow = std::vector<Status>;
@@ -43,8 +46,6 @@ private:
 
     bool SegmentPosIsValid(const TSegment& segment) const;
     bool SegmentPosIsLocked(const TSegment& segment) const;
-
-    size_t GetColumnsNum() const;
 
     static bool RowIsFullyLocked(const TStatusRow& row);
 
