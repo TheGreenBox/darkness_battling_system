@@ -144,6 +144,34 @@ void Test4() {
 
 } // namespace Slide
 
+namespace Teleport {
+
+void TestToSelf() {
+    TSegment pivot(Coords::TColRowPoint(1, 1));
+    TUnit::TSegments unitSegments = {TSegment(Coords::TColRowPoint(1, 1))};
+    TUnit unit(pivot, std::move(unitSegments));
+
+    TUnit result = unit.TeleportTo(pivot.GetPosition());
+
+    TUnit expected = unit.Clone();
+    ExpectEqual(result, expected);
+}
+
+void TestToOther() {
+    TUnit::TSegments unitSegments = {TSegment(Coords::TColRowPoint(2, 1))};
+    TSegment pivot(Coords::TColRowPoint(1, 1));
+    TUnit unit(pivot, std::move(unitSegments));
+    TSegment to(Coords::TColRowPoint(5, 3));
+
+    TUnit result = unit.TeleportTo(to.GetPosition());
+
+    TUnit::TSegments expectedSegments = {TSegment(Coords::TColRowPoint(6, 3))};
+    TUnit expected(to, std::move(expectedSegments));
+    ExpectEqual(result, expected);
+}
+
+} // namespace Teleport
+
 } // unnamed namespace
 
 int main() {
@@ -157,6 +185,9 @@ int main() {
     Slide::Test2();
     Slide::Test3();
     Slide::Test4();
+
+    Teleport::TestToSelf();
+    Teleport::TestToOther();
 
     return 0;
 }
