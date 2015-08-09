@@ -1,5 +1,7 @@
 #include "coordinate_systems.h"
 
+#include "exception.h"
+
 #include <cmath>
 
 namespace Coords {
@@ -48,7 +50,12 @@ RowColPoint Unstraighten(const StraightRowColPoint& straight) {
 HexPoint::HexPoint(Coordinate x, Coordinate y, Coordinate z)
     : X(x)
     , Y(y)
-    , Z(z) {}
+    , Z(z) {
+    if (X + Y + Z != 0) {
+        throw TException("Invalid hex point created at ")
+            << __FILE__ << ":" << __LINE__;
+    }
+}
 
 bool HexPoint::operator==(const HexPoint& other) const {
     return X == other.X && Y == other.Y && Z == other.Z;
