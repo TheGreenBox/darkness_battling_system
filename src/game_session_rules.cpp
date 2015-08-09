@@ -9,7 +9,6 @@ TGameSessionRules::TGameSessionRules(std::istream& jsonIn)
     Json::Value root;
     jsonIn >> root;
 
-    std::string my_encoding = root.get("my-encoding", "UTF-32" ).asString();
     InitialBoard = TBoard(
         root.get("width", "").asUInt64(),
         root.get("height", "").asUInt64()
