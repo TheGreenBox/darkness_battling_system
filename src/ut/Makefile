@@ -18,7 +18,8 @@ game_session_rules_ut:
 	../game_set_settings.cpp \
 	../move_operations.cpp \
 	../segment.cpp \
-	../unit.cpp
+	../unit.cpp \
+	../coordinate_systems.cpp
 
 board_ut:
 	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/board_ut \
@@ -26,7 +27,8 @@ board_ut:
 	../board.cpp \
 	../move_operations.cpp \
 	../segment.cpp \
-	../unit.cpp
+	../unit.cpp \
+	../coordinate_systems.cpp
 
 coordinate_systems_ut:
 	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/coordinate_systems_ut \
