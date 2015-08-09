@@ -30,20 +30,20 @@ TGameSessionRules::TGameSessionRules(std::istream& jsonIn)
     for (const auto& unit : root.get("units", "")) {
         TUnit::TSegments members;
         for (const auto& member : unit.get("members", "")) {
-            members.push_back(
-                TSegment(
-                    member.get("x", "").asInt64(),
-                    member.get("y", "").asInt64()
-                )
+            Coords::TColRowPoint position(
+                member.get("x", "").asInt64(),
+                member.get("y", "").asInt64()
             );
+            members.push_back(TSegment(position));
         }
         auto pivot = unit.get("pivot", "");
+        Coords::TColRowPoint pivotPosition(
+            pivot.get("x", "").asInt64(),
+            pivot.get("y", "").asInt64()
+        );
         Units.push_back(
             TUnit(
-                TSegment(
-                    pivot.get("x", "").asInt64(),
-                    pivot.get("y", "").asInt64()
-                ),
+                TSegment(pivotPosition),
                 std::move(members)
             )
         );
