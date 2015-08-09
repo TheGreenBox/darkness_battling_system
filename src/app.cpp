@@ -99,7 +99,7 @@ int main(int argn, char** args) {
 
             TBoard board = session.GetInitialBoard();
             for (const auto& unit : gameSet) {
-                TUnit startPos = board.SpawnAtStartPos(unit);
+                TUnit startPos = board.TeleportUnitToSpawnPosition(unit);
                 TWayGraph wayGraph(2, 2);
                 wayGraph.Build(board, startPos);
 
