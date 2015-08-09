@@ -83,9 +83,9 @@ TWayGraph::FindPositionWithMinMetrics(
     fromDirection = minDir;
 
     Coords::TColRowPoint pivot(minCol, minRow);
-    unit.TeleportTo(pivot);
+    unit = unit.TeleportTo(pivot);
     for (size_t rotationNum = 0; rotationNum < fromDirection; ++rotationNum) {
-        unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+        unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
     }
 
     return;
