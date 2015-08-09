@@ -104,5 +104,15 @@ private:
     size_t FinishDirection;
 
     bool IsValid(const Coords::TColRowPoint&) const;
+
+    bool IsCollision(
+        const TSegment& point,
+        size_t direction
+    ) const;
+
+    EMoveOperations FindCollisionDirection(
+        const TSegment& point,
+        size_t direction
+    ) const;
 };
 

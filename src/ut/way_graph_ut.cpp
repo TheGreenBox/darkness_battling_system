@@ -56,7 +56,8 @@ void TestFindWay() {
     TBoard board(3, 4);
     /*  OOO
         XOX
-        OOO */
+        OOO
+        OOX */
     board.LockCell(0, 1);
     board.LockCell(2, 1);
     board.LockCell(2, 3);
