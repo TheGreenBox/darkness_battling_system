@@ -32,6 +32,7 @@ private:
     static const Status CELL_IS_UNLOCKED;
 
     void SetCellStatus(size_t row, size_t column, Status newStatus);
+    bool IsValidCell(size_t row, size_t column) const;
 
     TStatusCells::iterator
     NextLockedRow(
@@ -39,7 +40,10 @@ private:
     );
     void ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter);
 
-    bool SegmentPosIsOccupied(const TSegment& segment) const;
+    bool SegmentPosIsValid(const TSegment& segment) const;
+    bool SegmentPosIsLocked(const TSegment& segment) const;
+
+    size_t GetColumnsNum() const;
 
     static bool RowIsFullyLocked(const TStatusRow& row);
 

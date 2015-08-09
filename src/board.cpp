@@ -26,6 +26,10 @@ bool TBoard::CellIsLocked(size_t row, size_t column) const {
     return Cells.at(row).at(column) == CELL_IS_LOCKED;
 }
 
+bool TBoard::IsValidCell(size_t row, size_t column) const {
+    return row < Cells.size() && column < GetColumnsNum();
+}
+
 size_t TBoard::CollapseRows() {
     size_t collapsedCount = 0;
 
@@ -53,6 +57,8 @@ void TBoard::ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter) 
             << __FILE__ << ":" << __LINE__;
     }
 
+    size_t columnsNum = GetColumnsNum();
+
     using TReverseIter = std::reverse_iterator<TStatusCells::iterator>;
     // NOTE: reversing iterator makes it to point one element before
     for (TReverseIter toShiftIter(shiftBorderIter); toShiftIter != Cells.rend();
@@ -62,7 +68,7 @@ void TBoard::ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter) 
         newPosition = std::move(toShift);
     }
 
-    Cells.front() = TStatusRow(Cells.back().size(), CELL_IS_UNLOCKED);
+    Cells.front() = TStatusRow(columnsNum, CELL_IS_UNLOCKED);
 }
 
 bool TBoard::RowIsFullyLocked(const TStatusRow& row) {
@@ -72,7 +78,7 @@ bool TBoard::RowIsFullyLocked(const TStatusRow& row) {
 
 bool TBoard::UnitWillFitInside(const TUnit& unit) const {
     for (const auto& segment : unit.GetSegments()) {
-        if (SegmentPosIsOccupied(segment)) {
+        if (!SegmentPosIsValid(segment) || SegmentPosIsLocked(segment)) {
             return false;
         }
     }
@@ -80,13 +86,26 @@ bool TBoard::UnitWillFitInside(const TUnit& unit) const {
     return true;
 }
 
-bool TBoard::SegmentPosIsOccupied(const TSegment& segment) const {
-    return CellIsLocked(segment.GetRow(), segment.GetColumn());
+bool TBoard::SegmentPosIsValid(const TSegment& segment) const {
+    const auto& position = segment.GetPosition();
+
+    bool posIsNonNegative = position.Row >= 0 && position.Column >= 0;
+    bool posIsInBoardBorders = IsValidCell(position.Row, position.Column);
+
+    return posIsNonNegative && posIsInBoardBorders;
+}
+
+bool TBoard::SegmentPosIsLocked(const TSegment& segment) const {
+    const auto& position = segment.GetPosition();
+    return CellIsLocked(position.Row, position.Column);
+}
+
+size_t TBoard::GetColumnsNum() const {
+    return Cells.empty() ? 0 : Cells.front().size();
 }
 
 std::string TBoard::ToString() const {
-    const size_t borderLen = Cells.empty() ? 1 : Cells.front().size();
-    const std::string border(borderLen, '-');
+    const std::string border(GetColumnsNum(), '-');
 
     std::string ret;
 

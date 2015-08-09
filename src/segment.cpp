@@ -2,45 +2,50 @@
 
 #include "exception.h"
 
-TSegment::TSegment(Coordinate row, Coordinate column)
-    : Row(row)
-    , Column(column) {}
+TSegment::TSegment(const Coords::ColRowPoint& position)
+    : Position(position) {}
 
 TSegment TSegment::Slide(EMoveOperations direction) const {
-    if (!IsSlideOperation(direction)) {
-        throw TException("Invalid slide operation recieved in ")
-            << __FILE__ << ":" << __LINE__;
-    }
+    Coords::HexPoint hexPos = Coords::ToHex(Position);
 
-    TSegment::Coordinate rowDelta = 0;
-    TSegment::Coordinate columnDelta = 0;
-
-    if (direction == EMoveOperations::SLIDE_EAST) {
-        columnDelta = 1;
-    }
-    else if (direction == EMoveOperations::SLIDE_WEST) {
-        columnDelta = -1;
-    }
-    else if (direction == EMoveOperations::SLIDE_SOUTHEAST) {
-        if (GetRow() % 2 == 0) {
-            rowDelta = 1;
+    switch (direction) {
+        case EMoveOperations::SLIDE_EAST: {
+            ++hexPos.X;
+            --hexPos.Z;
+            break;
         }
-        else {
-            rowDelta = 1;
-            columnDelta = 1;
+        case EMoveOperations::SLIDE_WEST: {
+            --hexPos.X;
+            ++hexPos.Z;
+            break;
         }
-    }
-    else if (direction == EMoveOperations::SLIDE_SOUTHWEST) {
-        if (GetRow() % 2 == 0) {
-            rowDelta = 1;
-            columnDelta = -1;
+        case EMoveOperations::SLIDE_SOUTHEAST: {
+            --hexPos.Z;
+            --hexPos.Y;
+            break;
         }
-        else {
-            rowDelta = 1;
+        case EMoveOperations::SLIDE_SOUTHWEST: {
+            --hexPos.X;
+            ++hexPos.Y;
+            break;
+        }
+        default: {
+            throw TException("Invalid slide operation recieved in ")
+                << __FILE__ << ":" << __LINE__;
         }
     }
 
-    return TSegment(Row + rowDelta, Column + columnDelta);
+    Coords::ColRowPoint newPos = Coords::FromHex<Coords::ColRowPoint>(hexPos);
+    return TSegment(newPos);
+}
+
+TSegment TSegment::TeleportBy(const Coords::ColRowPoint& delta) const {
+    Coords::ColRowPoint newPosition(
+        Position.Column + delta.Column,
+        Position.Row + delta.Row
+    );
+
+    return TSegment(newPosition);
 }
 
 TSegment
@@ -51,14 +56,9 @@ TSegment::RotateAround(
     if (true) {
         throw TException("Not implemented");
     }
-    return TSegment(0, 0);
+    return TSegment(Coords::ColRowPoint(0, 0));
 }
 
-TSegment::Coordinate TSegment::GetRow() const {
-    return Row;
+const Coords::ColRowPoint& TSegment::GetPosition() const {
+    return Position;
 }
-
-TSegment::Coordinate TSegment::GetColumn() const {
-    return Column;
-}
-

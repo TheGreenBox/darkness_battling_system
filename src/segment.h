@@ -2,16 +2,17 @@
 
 #include "move_operations.h"
 
+#include "coordinate_systems.h"
+
 #include <cstddef>
 
 class TSegment {
 public:
-    using Coordinate = int;
-
     TSegment() = delete;
-    TSegment(Coordinate row, Coordinate column);
+    explicit TSegment(const Coords::ColRowPoint& position);
 
     TSegment Slide(EMoveOperations direction) const;
+    TSegment TeleportBy(const Coords::ColRowPoint& delta) const;
 
     TSegment
     RotateAround(
@@ -19,10 +20,8 @@ public:
         EMoveOperations direction
     ) const;
 
-    Coordinate GetRow() const;
-    Coordinate GetColumn() const;
+    const Coords::ColRowPoint& GetPosition() const;
 
 private:
-    Coordinate Row;
-    Coordinate Column;
+    Coords::ColRowPoint Position;
 };
