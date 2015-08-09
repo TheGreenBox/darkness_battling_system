@@ -25,7 +25,7 @@ bool CellStatusChangesInDirection(
 
 } // unnamed namespace
 
-int calulateMetrics(const TBoard& board, const TUnit& unit) {
+int CalulateMetrics(const TBoard& board, const TUnit& unit) {
     TBoard modifiedBoard(board);
 
     for (const auto& segment : unit.GetSegments()) {

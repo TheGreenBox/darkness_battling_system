@@ -31,7 +31,7 @@ void TWayGraph::Build(const TBoard& board, const TUnit& srcUnit) {
                         turn
                     );
                     node.Available = true;
-                    node.Metrics = calulateMetrics(board, unit);
+                    node.Metrics = CalulateMetrics(board, unit);
                 }
                 unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
             }
