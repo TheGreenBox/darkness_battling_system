@@ -4,11 +4,12 @@ CC=g++
 LIB=
 FLAGS=-std=c++11 -Wall -I ../.. -I .. -I .
 
-ut: game_session_rules_ut board_ut coordinate_systems_ut movement_ut
+ut: game_session_rules_ut board_ut coordinate_systems_ut movement_ut way_graph_ut
 	${PRODUCT}/game_session_rules_ut
 	${PRODUCT}/board_ut
 	${PRODUCT}/coordinate_systems_ut
 	${PRODUCT}/movement_ut
+	${PRODUCT}/way_graph_ut
 
 game_session_rules_ut:
 	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/game_session_rules_ut \

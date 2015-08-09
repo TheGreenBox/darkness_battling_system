@@ -1,9 +1,9 @@
 #pragma once
 
+#include "board.h"
 #include "coordinate_systems.h"
 #include "segment.h"
 #include "unit.h"
-#include "board.h"
 
 #include <array>
 #include <cstddef>
@@ -12,12 +12,26 @@
 
 class TWayGraph {
 public:
-    using Coordinate = Coords::ColRowPoint::Coordinate;
+    using TCoordinate = Coords::TColRowPoint::TCoordinate;
 
-    explicit TWayGraph(Coordinate rowShift, Coordinate columnShift);
+    TWayGraph(TCoordinate rowShift, TCoordinate columnShift);
+
+    TWayGraph(TWayGraph&&) = default;
+    TWayGraph& operator=(TWayGraph&&) = default;
+
+    TWayGraph() = delete;
     TWayGraph(const TWayGraph&) = delete;
+    TWayGraph& operator=(const TWayGraph&) = delete;
 
     void Build(const TBoard&, const TUnit&);
+
+    TWayGraph Clone() const;
+
+    std::vector<EMoveOperations>
+    FindWay(
+        const TSegment& from,
+        const TSegment& to
+    );
 
     enum class EColor {
         WHITE,
@@ -28,20 +42,17 @@ public:
     struct TNode {
         int Metrics = -1;
         EColor Color = EColor::WHITE;  // for dfs algo
-        bool Occupied = true;
-
-        operator bool() {
-            return Occupied;
-        }
+        bool Available = false;
     };
 
-    TWayGraph Clone() const;
+    bool
+    CheckNode(
+        TCoordinate column,
+        TCoordinate row,
+        size_t direction
+    ) const;
 
-    std::vector<EMoveOperations>
-    FindWay(
-        const TSegment& from,
-        const TSegment& to
-    );
+    std::string ToString() const;
 
 private:
     static const size_t TurnDirections = 6;
@@ -49,14 +60,17 @@ private:
     using TMatrixRow = std::vector<TVertical>;
     using TMatrix = std::vector<TMatrixRow>;
 
-    TSegment GetCoordinateFromIndex(size_t column, size_t row);
+    TSegment GetCoordinateFromIndex(size_t column, size_t row) const;
 
-    size_t GetRowIndexFromCoordinate(Coordinate row);
+    size_t GetRowIndexFromCoordinate(TCoordinate row) const;
 
-    size_t GetColumnIndexFromCoordinate(Coordinate column);
+    size_t GetColumnIndexFromCoordinate(TCoordinate column) const;
+
+    TNode& GetNode(TCoordinate column, TCoordinate row, size_t direction);
+    const TNode&  GetNode(TCoordinate column, TCoordinate row, size_t direction) const;
 
     TMatrix Graph;
-    Coords::ColRowPoint::Coordinate RowShift;
-    Coords::ColRowPoint::Coordinate ColumnShift;
+    Coords::TColRowPoint::TCoordinate RowShift;
+    Coords::TColRowPoint::TCoordinate ColumnShift;
 };
 
