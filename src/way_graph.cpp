@@ -105,6 +105,71 @@ TWayGraph::FindWay(
     return AllWays;
 }
 
+
+bool TWayGraph::IsCollision(
+    const TSegment& point,
+    size_t direction
+) const {
+    if (!IsValid(point.GetPosition())) {
+        return true;
+    }
+
+    const TNode& currentNode = GetNode(
+        point.GetPosition().Column,
+        point.GetPosition().Row,
+        direction
+    );
+
+    if (!currentNode.Available) {
+        return true;
+    }
+    return false;
+}
+
+EMoveOperations TWayGraph::FindCollisionDirection(
+    const TSegment& point,
+    size_t direction
+) const {
+    auto next = point.Slide(EMoveOperations::SLIDE_EAST);
+    if (IsCollision(next, direction)) {
+        return EMoveOperations::SLIDE_EAST;
+    }
+
+    next = point.Slide(EMoveOperations::SLIDE_WEST);
+    if (IsCollision(next, direction)) {
+        return EMoveOperations::SLIDE_WEST;
+    }
+
+    next = point.Slide(EMoveOperations::SLIDE_SOUTHEAST);
+    if (IsCollision(next, direction)) {
+        return EMoveOperations::SLIDE_SOUTHEAST;
+    }
+
+    next = point.Slide(EMoveOperations::SLIDE_SOUTHWEST);
+    if (IsCollision(next, direction)) {
+        return EMoveOperations::SLIDE_SOUTHWEST;
+    }
+
+    size_t newdirection = direction;
+    if (direction == 0) {
+        newdirection = TurnDirections - 1;
+    }
+    if (IsCollision(point, newdirection)) {
+        return EMoveOperations::ROTATE_CLOCKWISE;
+    }
+
+    if (direction == TurnDirections - 1) {
+        newdirection = 0;
+    }
+    if (IsCollision(point, newdirection)) {
+        return EMoveOperations::ROTATE_ANTI_CLOCKWISE;
+    }
+
+    throw TException("Collision direction not found");
+
+    return EMoveOperations::COUNT;
+}
+
 void TWayGraph::Dfs(
     const TSegment& point,
     size_t direction
@@ -128,7 +193,9 @@ void TWayGraph::Dfs(
     }
 
     if (point == FinishPoint && direction == FinishDirection) {
+        CurrentWay.push_back(FindCollisionDirection(point, direction));
         AllWays.push_back(CurrentWay);
+        CurrentWay.pop_back();
         return;
     }
 
