@@ -38,6 +38,27 @@ TUnit::TSegments TUnit::SlideSegments(EMoveOperations direction) const {
     return ret;
 }
 
+TUnit TUnit::TeleportTo(const Coords::ColRowPoint& newPivotPos) const {
+    Coords::ColRowPoint oldPivotPos = Pivot.GetPosition();
+    Coords::ColRowPoint delta(
+        newPivotPos.Column - oldPivotPos.Column,
+        newPivotPos.Row - oldPivotPos.Row
+    );
+
+    return TUnit(Pivot.TeleportBy(delta), TeleportSegments(delta));
+}
+
+TUnit::TSegments TUnit::TeleportSegments(const Coords::ColRowPoint& delta) const {
+    TSegments ret;
+    ret.reserve(Segments.size());
+    for (const TSegment& segment : Segments) {
+        TSegment teleportedSegment = segment.TeleportBy(delta);
+        ret.push_back(teleportedSegment);
+    }
+
+    return ret;
+}
+
 TUnit TUnit::Rotate(EMoveOperations direction) const {
     return TUnit(Pivot, RotateSegments(direction));
 }

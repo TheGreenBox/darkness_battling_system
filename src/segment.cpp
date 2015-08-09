@@ -39,6 +39,15 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
     return TSegment(newPos);
 }
 
+TSegment TSegment::TeleportBy(const Coords::ColRowPoint& delta) const {
+    Coords::ColRowPoint newPosition(
+        Position.Column + delta.Column,
+        Position.Row + delta.Row
+    );
+
+    return TSegment(newPosition);
+}
+
 TSegment
 TSegment::RotateAround(
     const TSegment& /*point*/,

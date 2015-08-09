@@ -12,6 +12,7 @@ public:
     explicit TSegment(const Coords::ColRowPoint& position);
 
     TSegment Slide(EMoveOperations direction) const;
+    TSegment TeleportBy(const Coords::ColRowPoint& delta) const;
 
     TSegment
     RotateAround(
