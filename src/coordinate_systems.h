@@ -2,36 +2,36 @@
 
 namespace Coords {
 
-struct RowColPoint {
+struct ColRowPoint {
     using Coordinate = int;
 
-    RowColPoint(Coordinate column, Coordinate row);
+    ColRowPoint(Coordinate column, Coordinate row);
 
-    bool operator==(const RowColPoint&) const;
-    bool operator!=(const RowColPoint&) const;
-
-    Coordinate Column;
-    Coordinate Row;
-};
-
-struct StraightRowColPoint {
-    using Coordinate = RowColPoint::Coordinate;
-
-    StraightRowColPoint(Coordinate column, Coordinate row);
-
-    bool operator==(const StraightRowColPoint&) const;
-    bool operator!=(const StraightRowColPoint&) const;
+    bool operator==(const ColRowPoint&) const;
+    bool operator!=(const ColRowPoint&) const;
 
     Coordinate Column;
     Coordinate Row;
 };
 
-StraightRowColPoint Straighten(const RowColPoint&);
-RowColPoint Unstraighten(const StraightRowColPoint&);
+struct StraightColRowPoint {
+    using Coordinate = ColRowPoint::Coordinate;
+
+    StraightColRowPoint(Coordinate column, Coordinate row);
+
+    bool operator==(const StraightColRowPoint&) const;
+    bool operator!=(const StraightColRowPoint&) const;
+
+    Coordinate Column;
+    Coordinate Row;
+};
+
+StraightColRowPoint Straighten(const ColRowPoint&);
+ColRowPoint Unstraighten(const StraightColRowPoint&);
 
 
 struct HexPoint {
-    using Coordinate = RowColPoint::Coordinate;
+    using Coordinate = ColRowPoint::Coordinate;
 
     HexPoint(Coordinate x, Coordinate y, Coordinate z);
 
@@ -43,8 +43,8 @@ struct HexPoint {
     Coordinate Z;
 };
 
-HexPoint ToHex(const RowColPoint&);
-HexPoint ToHex(const StraightRowColPoint&);
+HexPoint ToHex(const ColRowPoint&);
+HexPoint ToHex(const StraightColRowPoint&);
 
 template <typename RetType>
 RetType FromHex(const HexPoint&);

@@ -6,44 +6,44 @@
 
 namespace Coords {
 
-RowColPoint::RowColPoint(Coordinate column, Coordinate row)
+ColRowPoint::ColRowPoint(Coordinate column, Coordinate row)
     : Column(column)
     , Row(row) {}
 
-bool RowColPoint::operator==(const RowColPoint& other) const {
+bool ColRowPoint::operator==(const ColRowPoint& other) const {
     return Column == other.Column && Row == other.Row;
 }
 
-bool RowColPoint::operator!=(const RowColPoint& other) const {
+bool ColRowPoint::operator!=(const ColRowPoint& other) const {
     return !operator==(other);
 }
 
-StraightRowColPoint::StraightRowColPoint(Coordinate column, Coordinate row)
+StraightColRowPoint::StraightColRowPoint(Coordinate column, Coordinate row)
     : Column(column)
     , Row(row) {}
 
-bool StraightRowColPoint::operator==(const StraightRowColPoint& other) const {
+bool StraightColRowPoint::operator==(const StraightColRowPoint& other) const {
     return Column == other.Column && Row == other.Row;
 }
 
-bool StraightRowColPoint::operator!=(const StraightRowColPoint& other) const {
+bool StraightColRowPoint::operator!=(const StraightColRowPoint& other) const {
     return !operator==(other);
 }
 
-StraightRowColPoint Straighten(const RowColPoint& rowCol) {
-    StraightRowColPoint::Coordinate column
-        = rowCol.Column - std::floor(static_cast<float>(rowCol.Row) / 2);
-    StraightRowColPoint::Coordinate row = rowCol.Row;
+StraightColRowPoint Straighten(const ColRowPoint& colRow) {
+    StraightColRowPoint::Coordinate column
+        = colRow.Column - std::floor(static_cast<float>(colRow.Row) / 2);
+    StraightColRowPoint::Coordinate row = colRow.Row;
 
-    return StraightRowColPoint(column, row);
+    return StraightColRowPoint(column, row);
 }
 
-RowColPoint Unstraighten(const StraightRowColPoint& straight) {
-    RowColPoint::Coordinate row = straight.Row;
-    RowColPoint::Coordinate column
+ColRowPoint Unstraighten(const StraightColRowPoint& straight) {
+    ColRowPoint::Coordinate row = straight.Row;
+    ColRowPoint::Coordinate column
         = straight.Column + std::floor(static_cast<float>(straight.Row) / 2);;
 
-    return RowColPoint(column, row);
+    return ColRowPoint(column, row);
 }
 
 
@@ -65,7 +65,7 @@ bool HexPoint::operator!=(const HexPoint& other) const {
     return !operator==(other);
 }
 
-HexPoint ToHex(const StraightRowColPoint& point) {
+HexPoint ToHex(const StraightColRowPoint& point) {
     HexPoint::Coordinate x = point.Column;
     HexPoint::Coordinate y = point.Row;
     HexPoint::Coordinate z = - x - y;
@@ -73,18 +73,18 @@ HexPoint ToHex(const StraightRowColPoint& point) {
     return HexPoint(x, y, z);
 }
 
-HexPoint ToHex(const RowColPoint& point) {
+HexPoint ToHex(const ColRowPoint& point) {
     return ToHex(Straighten(point));
 }
 
 template <>
-StraightRowColPoint FromHex<StraightRowColPoint>(const HexPoint& hex) {
-    return StraightRowColPoint(hex.X, hex.Y);
+StraightColRowPoint FromHex<StraightColRowPoint>(const HexPoint& hex) {
+    return StraightColRowPoint(hex.X, hex.Y);
 }
 
 template <>
-RowColPoint FromHex<RowColPoint>(const HexPoint& hex) {
-    auto straigthPoint = FromHex<StraightRowColPoint>(hex);
+ColRowPoint FromHex<ColRowPoint>(const HexPoint& hex) {
+    auto straigthPoint = FromHex<StraightColRowPoint>(hex);
     return Unstraighten(straigthPoint);
 }
 

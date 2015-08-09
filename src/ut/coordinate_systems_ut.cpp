@@ -8,25 +8,25 @@ namespace {
 namespace TwoD {
 
 bool AreEqual(
-    const Coords::RowColPoint& rowCol,
-    const Coords::StraightRowColPoint& straight
+    const Coords::ColRowPoint& colRow,
+    const Coords::StraightColRowPoint& straight
 ) {
-    return rowCol.Row == straight.Row && rowCol.Column == straight.Column;
+    return colRow.Row == straight.Row && colRow.Column == straight.Column;
 }
 
 bool AreUnequal(
-    const Coords::RowColPoint& rowCol,
-    const Coords::StraightRowColPoint& straight
+    const Coords::ColRowPoint& colRow,
+    const Coords::StraightColRowPoint& straight
 ) {
-    return !AreEqual(rowCol, straight);
+    return !AreEqual(colRow, straight);
 }
 
 
 void TestReversability() {
-    for (Coords::RowColPoint::Coordinate col = -10; col < 10; ++col) {
-        for (Coords::RowColPoint::Coordinate row = -10; row < 10; ++row) {
-            Coords::RowColPoint point(col, row);
-            Coords::StraightRowColPoint straight = Coords::Straighten(point);
+    for (Coords::ColRowPoint::Coordinate col = -10; col < 10; ++col) {
+        for (Coords::ColRowPoint::Coordinate row = -10; row < 10; ++row) {
+            Coords::ColRowPoint point(col, row);
+            Coords::StraightColRowPoint straight = Coords::Straighten(point);
             if (Coords::Unstraighten(straight) != point) {
                 std::cout << "Reversability test failed on "
                           << "column " << col << " : row " << row << std::endl;
@@ -37,8 +37,8 @@ void TestReversability() {
 }
 
 void TestZeroPointUnmovability() {
-    Coords::RowColPoint zero(0, 0);
-    Coords::StraightRowColPoint straightZero = Coords::Straighten(zero);
+    Coords::ColRowPoint zero(0, 0);
+    Coords::StraightColRowPoint straightZero = Coords::Straighten(zero);
 
     if (AreUnequal(zero, straightZero)) {
         std::cout << "Zero test failed" << std::endl;
@@ -62,31 +62,31 @@ template<typename T> void ExpectEqual(
 }
 
 void Test1() {
-    std::vector<Coords::RowColPoint> rowCols;
-    std::vector<Coords::StraightRowColPoint> straights;
+    std::vector<Coords::ColRowPoint> colRows;
+    std::vector<Coords::StraightColRowPoint> straights;
 
 
-    rowCols.emplace_back(   0, 1);
+    colRows.emplace_back(   0, 1);
     straights.emplace_back( 0, 1);
-    rowCols.emplace_back(  -1, 0);
+    colRows.emplace_back(  -1, 0);
     straights.emplace_back(-1, 0);
-    rowCols.emplace_back(   5000, 0);
+    colRows.emplace_back(   5000, 0);
     straights.emplace_back( 5000, 0);
 
-    rowCols.emplace_back(   0, 2);
+    colRows.emplace_back(   0, 2);
     straights.emplace_back(-1, 2);
 
-    rowCols.emplace_back(  1, 2);
+    colRows.emplace_back(  1, 2);
     straights.emplace_back(0, 2);
 
-    rowCols.emplace_back(  3, 3);
+    colRows.emplace_back(  3, 3);
     straights.emplace_back(2, 3);
 
-    ExpectEqual(rowCols.size(), straights.size(), "Test vectors size mismatch");
+    ExpectEqual(colRows.size(), straights.size(), "Test vectors size mismatch");
 
-    for (size_t index = 0; index < rowCols.size(); ++index) {
-        ExpectEqual(Coords::Straighten(rowCols.at(index)), straights.at(index));
-        ExpectEqual(rowCols.at(index), Coords::Unstraighten(straights.at(index)));
+    for (size_t index = 0; index < colRows.size(); ++index) {
+        ExpectEqual(Coords::Straighten(colRows.at(index)), straights.at(index));
+        ExpectEqual(colRows.at(index), Coords::Unstraighten(straights.at(index)));
     }
 }
 
@@ -95,11 +95,11 @@ void Test1() {
 namespace Hex {
 
 void TestReversability() {
-    for (Coords::StraightRowColPoint::Coordinate col = -10; col < 10; ++col) {
-        for (Coords::StraightRowColPoint::Coordinate row = -10; row < 10; ++row) {
-            Coords::StraightRowColPoint point(col, row);
+    for (Coords::StraightColRowPoint::Coordinate col = -10; col < 10; ++col) {
+        for (Coords::StraightColRowPoint::Coordinate row = -10; row < 10; ++row) {
+            Coords::StraightColRowPoint point(col, row);
             Coords::HexPoint hex = Coords::ToHex(point);
-            if (Coords::FromHex<Coords::StraightRowColPoint>(hex) != point) {
+            if (Coords::FromHex<Coords::StraightColRowPoint>(hex) != point) {
                 std::cout << "Hex reversability test failed on "
                           << "column " << col << " : row " << row << std::endl;
                 return;
@@ -109,7 +109,7 @@ void TestReversability() {
 }
 
 void Test1() {
-    std::vector<Coords::StraightRowColPoint> straights;
+    std::vector<Coords::StraightColRowPoint> straights;
     std::vector<Coords::HexPoint> hexes;
 
     straights.emplace_back(0, 0);
