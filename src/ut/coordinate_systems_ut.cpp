@@ -1,6 +1,7 @@
 #include "coordinate_systems.h"
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 namespace {
@@ -52,13 +53,18 @@ void Test1() {
     hexes.emplace_back(2, 0, -2);
 
     colRows.emplace_back(-2, 2);
-    hexes.emplace_back(-2, 1, 1);
+    hexes.emplace_back(-3, 2, 1);
 
     ExpectEqual(colRows.size(), hexes.size(), "Test vectors size mismatch");
 
     for (size_t index = 0; index < colRows.size(); ++index) {
-        ExpectEqual(Coords::ToHex(colRows.at(index)), hexes.at(index));
-        ExpectEqual(colRows.at(index), Coords::FromHex(hexes.at(index)));
+        std::stringstream commentBuilder;
+        const auto& colRow = colRows.at(index);
+        commentBuilder << "2D->Hex->2D test: 2D (" << colRow.Column << ", "
+            << colRow.Row << ")";
+
+        ExpectEqual(Coords::ToHex(colRows.at(index)), hexes.at(index), commentBuilder.str());
+        ExpectEqual(colRows.at(index), Coords::FromHex(hexes.at(index)), commentBuilder.str());
     }
 }
 
