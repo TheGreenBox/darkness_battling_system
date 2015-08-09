@@ -17,6 +17,7 @@ app:
 	move_operations.cpp \
 	output_format.cpp \
 	segment.cpp \
+	way_graph.cpp \
 	unit.cpp
 
 ut:
