@@ -23,6 +23,8 @@ public:
     bool SegmentPosIsValid(const TSegment& segment) const;
     bool SegmentPosIsLocked(const TSegment& segment) const;
 
+    TUnit TeleportUnitToSpawnPosition(const TUnit& unit) const;
+
     size_t CollapseRows();
 
     std::string ToString() const;
