@@ -75,6 +75,9 @@ size_t TGameSessionRules::GetProblemId() const {
     return ProblemId;
 }
 
+bool TGameSessionRules::Empty() const {
+    return Seeds.empty();
+}
 
 namespace Private {
     TSeriesGenerator::TSeriesGenerator(Type seed, Type range)

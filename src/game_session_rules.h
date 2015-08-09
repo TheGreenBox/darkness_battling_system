@@ -19,6 +19,8 @@ public:
     TBoard GetInitialBoard() const;
     size_t GetProblemId() const;
 
+    bool Empty() const;
+
 private:
     TBoard InitialBoard;
     std::vector<TUnit> Units;
