@@ -12,6 +12,7 @@ app:
 	game_session_rules.cpp \
 	../lib/json/jsoncpp.cpp \
 	game_set_settings.cpp \
+	solution_cmd.cpp \
 	coordinate_systems.cpp \
 	move_operations.cpp \
 	output_format.cpp \
