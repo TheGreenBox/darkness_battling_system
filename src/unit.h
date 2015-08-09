@@ -19,6 +19,9 @@ public:
     TUnit(TUnit&&) = default;
     TUnit& operator=(TUnit&&) = default;
 
+    bool operator==(const TUnit&) const;
+    bool operator!=(const TUnit&) const;
+
     /**
      * @details Handles EVERY movement operation internally
      */

@@ -3,9 +3,32 @@
 #include "exception.h"
 #include "segment.h"
 
+#include <algorithm>
+
 TUnit::TUnit(const TSegment& pivot, TSegments&& segments)
     : Pivot(pivot)
     , Segments(std::move(segments)) {}
+
+bool TUnit::operator==(const TUnit& other) const {
+    for (const auto& segment : Segments) {
+        auto findIter = std::find(
+            other.Segments.begin(),
+            other.Segments.end(),
+            segment
+        );
+
+        if (findIter == other.Segments.end()) {
+            return false;
+        }
+    }
+
+    return Segments.size() == other.Segments.size()
+        && Pivot == other.Pivot;
+}
+
+bool TUnit::operator!=(const TUnit& other) const {
+    return !operator==(other);
+}
 
 TUnit TUnit::Move(EMoveOperations operation) const {
     if (IsSlideOperation(operation)) {
@@ -88,4 +111,3 @@ const TSegment& TUnit::GetPivot() const {
 TUnit TUnit::Clone() const {
     return TUnit(Pivot, TSegments(Segments));
 }
-
