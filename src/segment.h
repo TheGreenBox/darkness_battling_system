@@ -16,7 +16,7 @@ public:
 
     TSegment
     RotateAround(
-        const TSegment& point,
+        const Coords::ColRowPoint& pivot,
         EMoveOperations direction
     ) const;
 

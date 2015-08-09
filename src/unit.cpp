@@ -67,7 +67,10 @@ TUnit::TSegments TUnit::RotateSegments(EMoveOperations direction) const {
     TSegments ret;
     ret.reserve(Segments.size());
     for (const TSegment& segment : Segments) {
-        TSegment rotatedSegment = segment.RotateAround(Pivot, direction);
+        TSegment rotatedSegment = segment.RotateAround(
+            Pivot.GetPosition(),
+            direction
+        );
         ret.push_back(rotatedSegment);
     }
 
