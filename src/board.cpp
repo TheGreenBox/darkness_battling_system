@@ -18,6 +18,13 @@ void TBoard::SetCellStatus(size_t column, size_t row, Status newStatus) {
     Cells.at(row).at(column) = newStatus;
 }
 
+void TBoard::LockCells(const TUnit& unit) {
+    for (const auto& segment : unit.GetSegments()) {
+        const auto& position = segment.GetPosition();
+        LockCell(position.Column, position.Row);
+    }
+}
+
 void TBoard::UnlockCell(size_t column, size_t row) {
     SetCellStatus(column, row, CELL_IS_UNLOCKED);
 }

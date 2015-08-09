@@ -99,25 +99,30 @@ int main(int argn, char** args) {
 
             TBoard board = session.GetInitialBoard();
             for (const auto& unit : gameSet) {
-                TUnit positionedUnit = board.SpawnAtStartPos(unit);
+                TUnit startPos = board.SpawnAtStartPos(unit);
                 TWayGraph wayGraph(2, 2);
-                wayGraph.Build(board, positionedUnit);
+                wayGraph.Build(board, startPos);
 
+                TUnit endPos = startPos.Clone();
                 size_t endRotation = 0;
-                Coords::TColRowPoint endPivotPos(0, 0);
-                wayGraph.FindPositionWithMinMetrics(endPivotPos, endRotation);
+                wayGraph.FindPositionWithMinMetrics(endPos, endRotation);
 
                 auto ways = wayGraph.FindWay(
-                    positionedUnit.GetPivot().GetPosition(),
+                    startPos.GetPivot().GetPosition(),
                     0,
-                    endPivotPos,
+                    endPos.GetPivot().GetPosition(),
                     endRotation
                 );
 
-                if (!ways.empty()) {
-                    auto& way = ways.front();
-                    solution.Solution = MakeSolutionCmdFrom(way);
+                if (ways.empty()) {
+                    break;
                 }
+
+                auto& way = ways.front();
+                solution.Solution = MakeSolutionCmdFrom(way);
+
+                board.LockCells(endPos);
+                board.CollapseRows();
             }
 
             AnswerFormattedPrint(solutions, std::cout);

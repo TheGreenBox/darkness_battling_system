@@ -16,6 +16,7 @@ public:
 
     void LockCell(size_t column, size_t row);
     void UnlockCell(size_t column, size_t row);
+    void LockCells(const TUnit&);
 
     bool CellIsLocked(size_t column, size_t row) const;
     bool UnitWillFitInside(const TUnit& unit) const;
