@@ -2,11 +2,11 @@
 
 #include "exception.h"
 
-TSegment::TSegment(const Coords::ColRowPoint& position)
+TSegment::TSegment(const Coords::TColRowPoint& position)
     : Position(position) {}
 
 TSegment TSegment::Slide(EMoveOperations direction) const {
-    Coords::HexPoint hexPos = Coords::ToHex(Position);
+    Coords::THexPoint hexPos = Coords::ToHex(Position);
 
     switch (direction) {
         case EMoveOperations::SLIDE_EAST: {
@@ -35,12 +35,12 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
         }
     }
 
-    Coords::ColRowPoint newPos = Coords::FromHex<Coords::ColRowPoint>(hexPos);
+    Coords::TColRowPoint newPos = Coords::FromHex<Coords::TColRowPoint>(hexPos);
     return TSegment(newPos);
 }
 
-TSegment TSegment::TeleportBy(const Coords::ColRowPoint& delta) const {
-    Coords::ColRowPoint newPosition(
+TSegment TSegment::TeleportBy(const Coords::TColRowPoint& delta) const {
+    Coords::TColRowPoint newPosition(
         Position.Column + delta.Column,
         Position.Row + delta.Row
     );
@@ -50,48 +50,48 @@ TSegment TSegment::TeleportBy(const Coords::ColRowPoint& delta) const {
 
 TSegment
 TSegment::RotateAround(
-    const Coords::ColRowPoint& pivot,
+    const Coords::TColRowPoint& pivot,
     EMoveOperations direction
 ) const {
     static const auto shiftCoordsLeft
-        = [](const Coords::HexPoint& point) -> Coords::HexPoint {
+        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
         //    x y z
         // -> y z x
-        Coords::HexPoint::Coordinate y = point.X;
-        Coords::HexPoint::Coordinate z = point.Y;
-        Coords::HexPoint::Coordinate x = point.Z;
+        Coords::THexPoint::TCoordinate y = point.X;
+        Coords::THexPoint::TCoordinate z = point.Y;
+        Coords::THexPoint::TCoordinate x = point.Z;
 
-        return Coords::HexPoint(x, y, z);
+        return Coords::THexPoint(x, y, z);
     };
     static const auto shiftCoordsRight
-        = [](const Coords::HexPoint& point) -> Coords::HexPoint {
+        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
         //    x y z
         // -> z x y
-        Coords::HexPoint::Coordinate z = point.X;
-        Coords::HexPoint::Coordinate x = point.Y;
-        Coords::HexPoint::Coordinate y = point.Z;
+        Coords::THexPoint::TCoordinate z = point.X;
+        Coords::THexPoint::TCoordinate x = point.Y;
+        Coords::THexPoint::TCoordinate y = point.Z;
 
-        return Coords::HexPoint(x, y, z);
+        return Coords::THexPoint(x, y, z);
     };
     static const auto invertSigns
-        = [](const Coords::HexPoint& point) -> Coords::HexPoint {
-        Coords::HexPoint::Coordinate x = -1 * point.X;
-        Coords::HexPoint::Coordinate y = -1 * point.Y;
-        Coords::HexPoint::Coordinate z = -1 * point.Z;
+        = [](const Coords::THexPoint& point) -> Coords::THexPoint {
+        Coords::THexPoint::TCoordinate x = -1 * point.X;
+        Coords::THexPoint::TCoordinate y = -1 * point.Y;
+        Coords::THexPoint::TCoordinate z = -1 * point.Z;
 
-        return Coords::HexPoint(x, y, z);
+        return Coords::THexPoint(x, y, z);
     };
 
-    Coords::HexPoint hexPivot = Coords::ToHex(pivot);
-    Coords::HexPoint hexSelf = Coords::ToHex(Position);
+    Coords::THexPoint hexPivot = Coords::ToHex(pivot);
+    Coords::THexPoint hexSelf = Coords::ToHex(Position);
 
-    Coords::HexPoint hexSelfLocal(
+    Coords::THexPoint hexSelfLocal(
         hexSelf.X - hexPivot.X,
         hexSelf.Y - hexPivot.Y,
         hexSelf.Z - hexPivot.Z
     );
 
-    Coords::HexPoint newHexSelfLocal = hexSelfLocal;
+    Coords::THexPoint newHexSelfLocal = hexSelfLocal;
     switch (direction) {
         case EMoveOperations::ROTATE_CLOCKWISE: {
             newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
@@ -107,15 +107,15 @@ TSegment::RotateAround(
         }
     }
 
-    Coords::HexPoint newPosition(
+    Coords::THexPoint newPosition(
         hexPivot.X + newHexSelfLocal.X,
         hexPivot.Y + newHexSelfLocal.Y,
         hexPivot.Z + newHexSelfLocal.Z
     );
 
-    return TSegment(Coords::FromHex<Coords::ColRowPoint>(newPosition));
+    return TSegment(Coords::FromHex<Coords::TColRowPoint>(newPosition));
 }
 
-const Coords::ColRowPoint& TSegment::GetPosition() const {
+const Coords::TColRowPoint& TSegment::GetPosition() const {
     return Position;
 }

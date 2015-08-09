@@ -9,19 +9,19 @@
 class TSegment {
 public:
     TSegment() = delete;
-    explicit TSegment(const Coords::ColRowPoint& position);
+    explicit TSegment(const Coords::TColRowPoint& position);
 
     TSegment Slide(EMoveOperations direction) const;
-    TSegment TeleportBy(const Coords::ColRowPoint& delta) const;
+    TSegment TeleportBy(const Coords::TColRowPoint& delta) const;
 
     TSegment
     RotateAround(
-        const Coords::ColRowPoint& pivot,
+        const Coords::TColRowPoint& pivot,
         EMoveOperations direction
     ) const;
 
-    const Coords::ColRowPoint& GetPosition() const;
+    const Coords::TColRowPoint& GetPosition() const;
 
 private:
-    Coords::ColRowPoint Position;
+    Coords::TColRowPoint Position;
 };

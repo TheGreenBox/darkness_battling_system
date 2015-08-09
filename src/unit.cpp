@@ -38,9 +38,9 @@ TUnit::TSegments TUnit::SlideSegments(EMoveOperations direction) const {
     return ret;
 }
 
-TUnit TUnit::TeleportTo(const Coords::ColRowPoint& newPivotPos) const {
-    Coords::ColRowPoint oldPivotPos = Pivot.GetPosition();
-    Coords::ColRowPoint delta(
+TUnit TUnit::TeleportTo(const Coords::TColRowPoint& newPivotPos) const {
+    Coords::TColRowPoint oldPivotPos = Pivot.GetPosition();
+    Coords::TColRowPoint delta(
         newPivotPos.Column - oldPivotPos.Column,
         newPivotPos.Row - oldPivotPos.Row
     );
@@ -48,7 +48,7 @@ TUnit TUnit::TeleportTo(const Coords::ColRowPoint& newPivotPos) const {
     return TUnit(Pivot.TeleportBy(delta), TeleportSegments(delta));
 }
 
-TUnit::TSegments TUnit::TeleportSegments(const Coords::ColRowPoint& delta) const {
+TUnit::TSegments TUnit::TeleportSegments(const Coords::TColRowPoint& delta) const {
     TSegments ret;
     ret.reserve(Segments.size());
     for (const TSegment& segment : Segments) {
