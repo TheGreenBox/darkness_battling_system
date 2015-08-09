@@ -9,6 +9,7 @@ TWayGraph::TWayGraph(
 )
     : RowShift(rowShift)
     , ColumnShift(columnShift)
+    , FinishPoint(Coords::TColRowPoint(0, 0))  // FIXME
 {
 }
 
@@ -48,12 +49,86 @@ TWayGraph TWayGraph::Clone() const {
     return std::move(copy);
 }
 
-std::vector<EMoveOperations>
-TWayGraph::FindWay(const TSegment& from, const TSegment& to) {
-    if (true) {
-        throw TException("Not implemented");
+TWayGraph::TWays
+TWayGraph::FindWay(
+    const Coords::TColRowPoint& from,
+    size_t fromDirection,
+    const Coords::TColRowPoint& to,
+    size_t toDirection
+) {
+    FinishPoint = TSegment(to);
+    FinishDirection = toDirection;
+
+    Dfs(TSegment(from), fromDirection);
+    return AllWays;
+}
+
+void TWayGraph::Dfs(
+    const TSegment& point,
+    size_t direction
+) {
+    if (!IsValid(point.GetPosition())) {
+        return;
     }
-    return std::vector<EMoveOperations>(0);
+
+    TNode& currentNode = GetNode(
+        point.GetPosition().Column,
+        point.GetPosition().Row,
+        direction
+    );
+
+    if (!currentNode.Available) {
+        return;
+    }
+
+    if (currentNode.Color == EColor::BLACK) {
+        return;
+    }
+
+    if (point == FinishPoint && direction == FinishDirection) {
+        AllWays.push_back(CurrentWay);
+        return;
+    }
+
+    currentNode.Color = EColor::BLACK;
+
+    CurrentWay.push_back(EMoveOperations::SLIDE_EAST);
+    auto next = point.Slide(EMoveOperations::SLIDE_EAST);
+    Dfs(next, direction);
+    CurrentWay.pop_back();
+
+    CurrentWay.push_back(EMoveOperations::SLIDE_WEST);
+    next = point.Slide(EMoveOperations::SLIDE_WEST);
+    Dfs(next, direction);
+    CurrentWay.pop_back();
+
+    CurrentWay.push_back(EMoveOperations::SLIDE_SOUTHEAST);
+    next = point.Slide(EMoveOperations::SLIDE_SOUTHEAST);
+    Dfs(next, direction);
+    CurrentWay.pop_back();
+
+    CurrentWay.push_back(EMoveOperations::SLIDE_SOUTHWEST);
+    next = point.Slide(EMoveOperations::SLIDE_SOUTHWEST);
+    Dfs(next, direction);
+    CurrentWay.pop_back();
+
+    CurrentWay.push_back(EMoveOperations::ROTATE_CLOCKWISE);
+    if (direction == 0) {
+        Dfs(point, TurnDirections - 1);
+    } else {
+        Dfs(point, direction - 1);
+    }
+    CurrentWay.pop_back();
+
+    CurrentWay.push_back(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+    if (direction == TurnDirections - 1) {
+        Dfs(point, 0);
+    } else {
+        Dfs(point, direction + 1);
+    }
+    CurrentWay.pop_back();
+
+    //currentNode.Color = EColor::WHITE;
 }
 
 TSegment TWayGraph::GetCoordinateFromIndex(size_t colInd, size_t rowInd) const {
@@ -75,7 +150,7 @@ size_t TWayGraph::GetRowIndexFromCoordinate(
 size_t TWayGraph::GetColumnIndexFromCoordinate(
     Coords::TColRowPoint::TCoordinate column
 ) const {
-    column += RowShift;
+    column += ColumnShift;
     if (column < 0) {
         throw TException("Wrong conversion: negative column index");
     }
@@ -111,6 +186,18 @@ TWayGraph::GetNode(
     size_t columnInd = GetRowIndexFromCoordinate(column);
     size_t rowInd = GetColumnIndexFromCoordinate(row);
     return Graph.at(rowInd).at(columnInd).at(direction);
+}
+
+bool TWayGraph::IsValid(const Coords::TColRowPoint& pt) const {
+    TCoordinate rowInd = pt.Row + RowShift;
+    if (rowInd < 0 || rowInd > static_cast<TCoordinate>(Graph.size())) {
+        return false;
+    }
+    TCoordinate columnInd = pt.Column + ColumnShift;
+    if (columnInd < 0 || columnInd > static_cast<TCoordinate>(Graph.front().size())) {
+        return false;
+    }
+    return true;
 }
 
 std::string TWayGraph::ToString() const {
