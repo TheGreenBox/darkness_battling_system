@@ -103,3 +103,40 @@ std::string TBoard::ToString() const {
 
     return ret;
 }
+
+TWayGraph::TWayGraph()
+{
+}
+
+void Build(const TBoard& board, const TUnit& cunit) {
+    unit = cunit.Clone();
+    // range of scanning [ -3 , RowCount + 3    )
+    //                   [ -3 , ColumnCount + 3 )
+    const size_t reserve = 3;
+    const size_t rows = board.GetRowCount() + 2 * reserve;
+    const size_t columns = board.GetColumnCount() + 2 * reserve;
+    Graph.resize(rows, TSurfaceRow(columns));
+
+    TSegment scanStart(-reserve, -reserve);
+    // TODO: teleportate unit to zero(?) point
+
+    for (size_t row = 0; row < rows; ++row) {
+        for (size_t column = 0; column < columns; ++column) {
+            for (size_t turn = 0; turn < TurnDirections; ++turn) {
+                if (board.UnitWillFitInside(Unit)) {
+                    Field.at(Unit.GetPivot().GetRow())
+                         .at(Unit.GetPivot().GetColumn())
+                         .at(turn)
+                         .Occupied = false;
+                }
+                Unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+            }
+            Unit.Move(EMoveOperations::SLIDE_EAST);
+        }
+        // TODO: teleportate unit to next row start point
+    }
+}
+
+TWayGraph TWayGraph::clone() const {
+    return TWayGraph(*this);
+}
