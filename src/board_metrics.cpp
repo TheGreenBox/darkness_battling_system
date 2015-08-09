@@ -26,10 +26,7 @@ bool CellStatusChangesInDirection(
 int CalulateMetrics(const TBoard& board, const TUnit& unit) {
     TBoard modifiedBoard(board);
 
-    for (const auto& segment : unit.GetSegments()) {
-        const auto& position = segment.GetPosition();
-        modifiedBoard.LockCell(position.Column, position.Row);
-    }
+    modifiedBoard.LockCells(unit);
 
     size_t numOfRowTransitions = 0;
     size_t numOfSouthEastTransitions = 0;
