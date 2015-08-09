@@ -55,7 +55,7 @@ TWayGraph TWayGraph::Clone() const {
 
 void
 TWayGraph::FindPositionWithMinMetrics(
-    Coords::TColRowPoint& point,
+    TUnit& unit,
     size_t& fromDirection
 ) {
     int minMetrics = std::numeric_limits<int>::max();
@@ -79,9 +79,15 @@ TWayGraph::FindPositionWithMinMetrics(
             }
         }
     }
-    point.Column = minCol;
-    point.Row = minRow;
+
     fromDirection = minDir;
+
+    Coords::TColRowPoint pivot(minCol, minRow);
+    unit.TeleportTo(pivot);
+    for (size_t rotationNum = 0; rotationNum < fromDirection; ++rotationNum) {
+        unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+    }
+
     return;
 }
 
