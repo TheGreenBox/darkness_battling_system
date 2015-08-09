@@ -35,7 +35,7 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
         }
     }
 
-    Coords::TColRowPoint newPos = Coords::FromHex<Coords::TColRowPoint>(hexPos);
+    Coords::TColRowPoint newPos = Coords::FromHex(hexPos);
     return TSegment(newPos);
 }
 
@@ -113,7 +113,7 @@ TSegment::RotateAround(
         hexPivot.Z + newHexSelfLocal.Z
     );
 
-    return TSegment(Coords::FromHex<Coords::TColRowPoint>(newPosition));
+    return TSegment(Coords::FromHex(newPosition));
 }
 
 const Coords::TColRowPoint& TSegment::GetPosition() const {
