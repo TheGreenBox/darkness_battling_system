@@ -19,6 +19,8 @@ public:
 
     bool CellIsLocked(size_t column, size_t row) const;
     bool UnitWillFitInside(const TUnit& unit) const;
+    bool SegmentPosIsValid(const TSegment& segment) const;
+    bool SegmentPosIsLocked(const TSegment& segment) const;
 
     size_t CollapseRows();
 
@@ -43,9 +45,6 @@ private:
         TStatusCells::iterator searchStart
     );
     void ShiftDownAllRowsAboveOnce(TStatusCells::iterator& shiftBorderIter);
-
-    bool SegmentPosIsValid(const TSegment& segment) const;
-    bool SegmentPosIsLocked(const TSegment& segment) const;
 
     static bool RowIsFullyLocked(const TStatusRow& row);
 

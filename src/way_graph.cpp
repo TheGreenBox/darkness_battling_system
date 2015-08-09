@@ -1,4 +1,5 @@
 #include "way_graph.h"
+#include "board_metrics.h"
 #include "exception.h"
 
 #include <iostream>
@@ -24,11 +25,13 @@ void TWayGraph::Build(const TBoard& board, const TUnit& srcUnit) {
         for (size_t column = 0; column < columns; ++column) {
             for (size_t turn = 0; turn < TurnDirections; ++turn) {
                 if (board.UnitWillFitInside(unit)) {
-                    GetNode(
+                    auto& node = GetNode(
                         unit.GetPivot().GetPosition().Column,
                         unit.GetPivot().GetPosition().Row,
                         turn
-                    ).Available = true;
+                    );
+                    node.Available = true;
+                    node.Metrics = calulateMetrics(board, unit);
                 }
                 unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
             }

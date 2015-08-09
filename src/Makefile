@@ -8,6 +8,7 @@ app:
 	${CC} ${FLAGS} ${LIB} -o ${PRODUCT}/play_icfp2015 \
 	app.cpp \
 	board.cpp \
+	board_metrics.cpp \
 	game_session_rules.cpp \
 	../lib/json/jsoncpp.cpp \
 	game_set_settings.cpp \
