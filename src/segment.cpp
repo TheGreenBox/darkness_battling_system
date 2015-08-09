@@ -5,6 +5,15 @@
 TSegment::TSegment(const Coords::TColRowPoint& position)
     : Position(position) {}
 
+bool TSegment::operator==(const TSegment& other) const {
+    return Position == other.Position;
+}
+
+bool TSegment::operator!=(const TSegment& other) const {
+    return !operator==(other);
+}
+
+
 TSegment TSegment::Slide(EMoveOperations direction) const {
     Coords::THexPoint hexPos = Coords::ToHex(Position);
 
@@ -21,7 +30,7 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
         }
         case EMoveOperations::SLIDE_SOUTHEAST: {
             --hexPos.Z;
-            --hexPos.Y;
+            ++hexPos.Y;
             break;
         }
         case EMoveOperations::SLIDE_SOUTHWEST: {
@@ -94,11 +103,13 @@ TSegment::RotateAround(
     Coords::THexPoint newHexSelfLocal = hexSelfLocal;
     switch (direction) {
         case EMoveOperations::ROTATE_CLOCKWISE: {
-            newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
+            // newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
+            newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
             break;
         }
         case EMoveOperations::ROTATE_ANTI_CLOCKWISE: {
-            newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
+            // newHexSelfLocal = invertSigns(shiftCoordsRight(hexSelfLocal));
+            newHexSelfLocal = invertSigns(shiftCoordsLeft(hexSelfLocal));
             break;
         }
         default: {

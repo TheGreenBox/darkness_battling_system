@@ -11,6 +11,9 @@ public:
     TSegment() = delete;
     explicit TSegment(const Coords::TColRowPoint& position);
 
+    bool operator==(const TSegment&) const;
+    bool operator!=(const TSegment&) const;
+
     TSegment Slide(EMoveOperations direction) const;
     TSegment TeleportBy(const Coords::TColRowPoint& delta) const;
 
