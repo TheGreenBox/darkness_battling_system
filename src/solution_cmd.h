@@ -6,7 +6,4 @@
 #include <string>
 #include <vector>
 
-// Remove when the actual TWay is ready
-using TWay = std::vector<EMoveOperations>;
-
-std::string MakeSolutionCmdFrom(const TWay& way);
+std::string MakeSolutionCmdFrom(const TWayGraph::TWay& way);

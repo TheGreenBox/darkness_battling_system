@@ -22,6 +22,7 @@ TGameSessionRules::TGameSessionRules(std::istream& jsonIn)
     }
 
     SourceLength = root.get("sourceLength", "").asUInt64();
+    ProblemId = root.get("id", "").asUInt64();
 
     for (const auto& seed : root.get("sourceSeeds", "")) {
         Seeds.push_back(seed.asLargestInt());
@@ -51,20 +52,29 @@ TGameSessionRules::TGameSessionRules(std::istream& jsonIn)
 }
 
 TGameSetSettings TGameSessionRules::NextSet() {
-    Private::TSeriesGenerator gen(Seeds.front(), Units.size());
+    TSeed thisSetSeed = Seeds.front();
     Seeds.pop_front();
+    Private::TSeriesGenerator gen(thisSetSeed, Units.size());
+
     TGameSetSettings gameSet;
+    gameSet.AssignSeed(thisSetSeed);
     for (size_t i = 0; i < SourceLength; ++i) {
         gameSet.Push(
             Units[gen.Next()].Clone()
         );
     }
+
     return gameSet;
 }
 
 TBoard TGameSessionRules::GetInitialBoard() const {
     return InitialBoard;
 }
+
+size_t TGameSessionRules::GetProblemId() const {
+    return ProblemId;
+}
+
 
 namespace Private {
     TSeriesGenerator::TSeriesGenerator(Type seed, Type range)

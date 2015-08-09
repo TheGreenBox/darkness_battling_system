@@ -22,7 +22,7 @@ MOVE_TO_CMD_SYMBOLS{
 
 } // unnamed namespace
 
-std::string MakeSolutionCmdFrom(const TWay& way) {
+std::string MakeSolutionCmdFrom(const TWayGraph::TWay& way) {
     std::string ret;
     for (EMoveOperations operation : way) {
         size_t sizetOperation = static_cast<size_t>(operation);

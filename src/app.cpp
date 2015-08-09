@@ -5,6 +5,8 @@
 #include "exception.h"
 #include "game_session_rules.h"
 #include "output_format.h"
+#include "solution_cmd.h"
+#include "way_graph.h"
 
 #include <lib/json/json/json.h>
 
@@ -19,7 +21,6 @@
 
 struct TArgs {
     std::vector<std::string> Filenames;
-    std::vector<size_t> ProblemIds;
     std::vector<std::string> PhraseOfPower;
     std::string DebugCmd;
     size_t TimeLimit = 0;
@@ -85,35 +86,41 @@ int main(int argn, char** args) {
     try {
         TArgs arguments = argparse(argn, args);
 
+        std::vector<TProblemSolution> solutions;
         for (const auto& fname : arguments.Filenames) {
             std::fstream fin(fname);
             TGameSessionRules session(fin);
-            if (arguments.DebugCmd == "src") {
-                auto gameSet = session.NextSet();
-                for (const auto& u : gameSet) {
-                    Json::Value jsonRec(Json::objectValue);
-                    jsonRec["members"] = Json::arrayValue;
-                    for (const auto& seg : u.GetSegments()) {
-                        Json::Value jsonMemmber(Json::objectValue);
-                        const auto& position = seg.GetPosition();
-                        jsonMemmber["c"] = position.Column;
-                        jsonMemmber["r"] = position.Row;
-                        jsonRec["members"].append(jsonMemmber);
-                    }
-                    Json::Value jsonPivot(Json::objectValue);
-                    const auto& pivotPosisiton = u.GetPivot().GetPosition();
-                    jsonPivot["c"] = pivotPosisiton.Column;
-                    jsonPivot["r"] = pivotPosisiton.Row;
-                    jsonRec["pivot"] = jsonPivot;
+            auto gameSet = session.NextSet();
 
-                    Json::StreamWriterBuilder builder;
-                    builder["indentation"] = "";  // or whatever you like
-                    std::unique_ptr<Json::StreamWriter> writer(
-                        builder.newStreamWriter());
-                    writer->write(jsonRec, &std::cout);
-                    std::cout << std::endl;  // add lf and flush
+            solutions.emplace_back();
+            TProblemSolution& solution = solutions.back();
+            solution.ProblemId = session.GetProblemId();
+            solution.Seed = gameSet.GetSeed();
+
+            TBoard board = session.GetInitialBoard();
+            for (const auto& unit : gameSet) {
+                TUnit positionedUnit = board.SpawnAtStartPos(unit);
+                TWayGraph wayGraph(2, 2);
+                wayGraph.Build(board, positionedUnit);
+
+                size_t endRotation = 0;
+                Coords::TColRowPoint endPivotPos(0, 0);
+                wayGraph.FindPositionWithMinMetrics(endPivotPos, endRotation);
+
+                auto ways = wayGraph.FindWay(
+                    positionedUnit.GetPivot().GetPosition(),
+                    0,
+                    endPivotPos,
+                    endRotation
+                );
+
+                if (!ways.empty()) {
+                    auto& way = ways.front();
+                    solution.Solution = MakeSolutionCmdFrom(way);
                 }
             }
+
+            AnswerFormattedPrint(solutions, std::cout);
         }
 
     } catch (const std::exception& except) {

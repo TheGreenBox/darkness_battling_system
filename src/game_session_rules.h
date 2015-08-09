@@ -17,11 +17,13 @@ public:
     TGameSetSettings NextSet();
 
     TBoard GetInitialBoard() const;
+    size_t GetProblemId() const;
 
 private:
     TBoard InitialBoard;
     std::vector<TUnit> Units;
     size_t SourceLength;
+    size_t ProblemId;
 
     std::deque<TSeed> Seeds;
 };

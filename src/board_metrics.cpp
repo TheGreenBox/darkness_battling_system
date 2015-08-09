@@ -1,7 +1,5 @@
 #include "board_metrics.h"
 
-#include <iostream>
-
 namespace {
 
 bool CellStatusChangesInDirection(
@@ -66,16 +64,9 @@ int CalulateMetrics(const TBoard& board, const TUnit& unit) {
     size_t rowsCollaped = modifiedBoard.CollapseRows();
     size_t pivotRow = unit.GetPivot().GetPosition().Row;
 
-    int ret = -3.2178882868487753 * numOfRowTransitions
+    return -3.2178882868487753 * numOfRowTransitions
         + -4.674347653 * numOfSouthEastTransitions
         + -4.674347653 * numOfSouthWestTransitions
         + 3.4181268101392694 * rowsCollaped
         + 4.500158825082766 * pivotRow;
-
-    std::cout << "Metrics: " << ret << std::endl;
-    std::cout << rowsCollaped << " " << pivotRow << "\t\t" << numOfRowTransitions << " "
-        << numOfSouthEastTransitions << " "
-        << numOfSouthWestTransitions << std::endl;
-
-    return ret;
 }
