@@ -58,10 +58,10 @@ TWayGraph::FindPositionWithMaxMetrics(
     TUnit& unit,
     size_t& fromDirection
 ) {
-    int minMetrics = std::numeric_limits<int>::min();
-    size_t minRow = -1;
-    size_t minCol = -1;
-    size_t minDir = -1;
+    int maxMetrics = std::numeric_limits<int>::min();
+    size_t maxRow = -1;
+    size_t maxCol = -1;
+    size_t maxDir = -1;
 
     size_t rows = Graph.size();
     size_t columns = Graph.front().size();
@@ -69,20 +69,29 @@ TWayGraph::FindPositionWithMaxMetrics(
     for (size_t row = 0; row < rows; ++row) {
         for (size_t column = 0; column < columns; ++column) {
             for (size_t turn = 0; turn < TurnDirections; ++turn) {
-                int metrics = Graph.at(row).at(column).at(turn).Metrics;
-                if (metrics > minMetrics) {
-                    minMetrics = metrics;
-                    minRow = row;
-                    minCol = column;
-                    minDir = turn;
+                auto& node = Graph.at(row).at(column).at(turn);
+                if (node.Available && node.Metrics > maxMetrics) {
+
+                   // std::cerr << "Metrics: "
+                   //     << "{ " << row
+                   //     << ", " << column
+                   //     << ", " << turn
+                   //     << " }: " << node.Metrics
+                   //     << std::endl;
+
+                    maxMetrics = node.Metrics;
+                    maxRow = row;
+                    maxCol = column;
+                    maxDir = turn;
                 }
             }
         }
     }
 
-    fromDirection = minDir;
+    fromDirection = maxDir;
 
-    Coords::TColRowPoint pivot(minCol, minRow);
+
+    Coords::TColRowPoint pivot = GetCoordinateFromIndex(maxCol, maxRow);
     unit = unit.TeleportTo(pivot);
     for (size_t rotationNum = 0; rotationNum < fromDirection; ++rotationNum) {
         unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
@@ -240,10 +249,13 @@ void TWayGraph::Dfs(
     //currentNode.Color = EColor::WHITE;
 }
 
-TSegment TWayGraph::GetCoordinateFromIndex(size_t colInd, size_t rowInd) const {
+Coords::TColRowPoint
+TWayGraph::GetCoordinateFromIndex(
+    size_t colInd, size_t rowInd
+) const {
     auto row = static_cast<TCoordinate>(rowInd) - RowShift;
     auto column = static_cast<TCoordinate>(colInd) - ColumnShift;
-    return TSegment(Coords::TColRowPoint(column, row));
+    return Coords::TColRowPoint(column, row);
 }
 
 size_t TWayGraph::GetRowIndexFromCoordinate(

@@ -7,8 +7,9 @@
 
 #include <array>
 #include <cstddef>
-#include <vector>
+#include <limits>
 #include <string>
+#include <vector>
 
 class TWayGraph {
 public:
@@ -57,7 +58,7 @@ private:
     };
 
     struct TNode {
-        int Metrics = -1;
+        int Metrics = std::numeric_limits<int>::min();
         EColor Color = EColor::WHITE;  // for dfs algo
         bool Available = false;
     };
@@ -67,7 +68,10 @@ private:
     using TMatrixRow = std::vector<TVertical>;
     using TMatrix = std::vector<TMatrixRow>;
 
-    TSegment GetCoordinateFromIndex(size_t column, size_t row) const;
+    Coords::TColRowPoint
+    GetCoordinateFromIndex(
+        size_t colInd, size_t rowInd
+    ) const;
 
     size_t GetRowIndexFromCoordinate(TCoordinate row) const;
 
