@@ -90,43 +90,69 @@ int main(int argn, char** args) {
         for (const auto& fname : arguments.Filenames) {
             std::fstream fin(fname);
             TGameSessionRules session(fin);
-            auto gameSet = session.NextSet();
+            while (!session.Empty()) {
+                auto gameSet = session.NextSet();
 
-            solutions.emplace_back();
-            TProblemSolution& solution = solutions.back();
-            solution.ProblemId = session.GetProblemId();
-            solution.Seed = gameSet.GetSeed();
+                solutions.emplace_back();
+                TProblemSolution& solution = solutions.back();
+                solution.ProblemId = session.GetProblemId();
+                solution.Seed = gameSet.GetSeed();
 
-            TBoard board = session.GetInitialBoard();
-            for (const auto& unit : gameSet) {
-                TUnit startPos = board.TeleportUnitToSpawnPosition(unit);
-                TWayGraph wayGraph(2, 2);
-                wayGraph.Build(board, startPos);
+                TBoard board = session.GetInitialBoard();
+                for (const auto& unit : gameSet) {
+                    std::cerr
+                        << "{ " << unit.GetPivot().GetPosition().Column
+                        << ", " << unit.GetPivot().GetPosition().Row
+                        << " }: [";
+                    for (const auto& segment : unit.GetSegments()) {
+                        std::cerr
+                            << "{ " << segment.GetPosition().Column
+                            << ", " << segment.GetPosition().Row
+                            << " },";
+                    }
+                    std::cerr << "]" << std::endl;
+                    std::cerr << board.ToString() << std::endl;
+                    TUnit startPos = board.TeleportUnitToSpawnPosition(unit);
+                    TWayGraph wayGraph(2, 2);
+                    wayGraph.Build(board, startPos);
+                    std::cerr << wayGraph.ToString() << std::endl;
 
-                TUnit endPos = startPos.Clone();
-                size_t endRotation = 0;
-                wayGraph.FindPositionWithMinMetrics(endPos, endRotation);
+                    TUnit endPos = startPos.Clone();
+                    size_t endRotation = 0;
+                    wayGraph.FindPositionWithMaxMetrics(endPos, endRotation);
 
-                auto ways = wayGraph.FindWay(
-                    startPos.GetPivot().GetPosition(),
-                    0,
-                    endPos.GetPivot().GetPosition(),
-                    endRotation
-                );
+                    std::cerr << "Start pos: "
+                        << "{ " << startPos.GetPivot().GetPosition().Column
+                        << ", " << startPos.GetPivot().GetPosition().Row
+                        << ", " << 0
+                        << " }" << std::endl;
 
-                if (ways.empty()) {
-                    break;
+                    std::cerr << "End pos: "
+                        << "{ " << endPos.GetPivot().GetPosition().Column
+                        << ", " << endPos.GetPivot().GetPosition().Row
+                        << ", " << endRotation
+                        << " }" << std::endl;
+
+                    auto ways = wayGraph.FindWay(
+                        startPos.GetPivot().GetPosition(),
+                        0,
+                        endPos.GetPivot().GetPosition(),
+                        endRotation
+                    );
+
+                    std::cerr << "ways size: " << ways.size() << '\n' << std::endl;
+                    if (ways.empty()) {
+                        break;
+                    }
+
+                    solution.Solution += MakeSolutionCmdFrom(ways.front());
+
+                    board.LockCells(endPos);
+                    board.CollapseRows();
                 }
-
-                auto& way = ways.front();
-                solution.Solution = MakeSolutionCmdFrom(way);
-
-                board.LockCells(endPos);
-                board.CollapseRows();
             }
-
-            AnswerFormattedPrint(solutions, std::cout);
         }
+        AnswerFormattedPrint(solutions, std::cout);
 
     } catch (const std::exception& except) {
         std::cerr << except.what() << std::endl;
