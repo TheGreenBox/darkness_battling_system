@@ -122,7 +122,6 @@ TUnit TBoard::TeleportUnitToSpawnPosition(const TUnit& unit) const {
             left = segment.GetPosition().Column;
         }
     }
-    std::cerr << "r, l: {" << right << ", " << left << "}\n";
     Coords::TColRowPoint::TCoordinate middle = (right - left) / 2;
     Coords::TColRowPoint::TCoordinate shift = (GetColumnCount() + 1)/2 - 1 - middle;
 

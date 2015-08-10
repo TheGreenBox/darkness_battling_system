@@ -28,11 +28,9 @@ std::string MakeSolutionCmdFrom(const TWayGraph::TWay& way) {
     for (EMoveOperations operation : way) {
         size_t sizetOperation = static_cast<size_t>(operation);
         const auto& thisOpSymbols = MOVE_TO_CMD_SYMBOLS.at(sizetOperation);
-        // size_t symbolIndex = rand() % thisOpSymbols.size();
         size_t symbolIndex = 0;
         ret += thisOpSymbols.at(symbolIndex);
     }
 
-    std::cerr << "way: " << ret << std::endl;
     return ret;
 }
