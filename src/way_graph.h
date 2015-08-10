@@ -10,6 +10,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <queue>
 
 class TWayGraph {
 public:
@@ -31,7 +32,23 @@ public:
     using TWay = std::vector<EMoveOperations>;
     using TWays = std::vector<TWay>;
 
-    void FindPositionWithMaxMetrics(TUnit& unit, size_t& fromDirection);
+    struct TEndPosition {
+        TEndPosition()
+            : Unit(TUnit(
+                TSegment(Coords::TColRowPoint(0, 0)),
+                TUnit::TSegments()
+            ))
+        {
+        }
+        int Metrics;
+        TUnit Unit;
+        size_t Direction;
+        bool operator<(const TEndPosition& other) const {
+            return Metrics < other.Metrics;
+        }
+    };
+    std::priority_queue<TEndPosition>
+    FindPositionWithMaxMetrics(const TUnit& unit, size_t fromDirection);
 
     TWays
     FindWay(

@@ -99,6 +99,7 @@ int main(int argn, char** args) {
                 solution.Seed = gameSet.GetSeed();
 
                 TBoard board = session.GetInitialBoard();
+                size_t unitNum = 0;
                 for (const auto& unit : gameSet) {
                     unit.DebugPrint();
                     std::cerr << board.ToString() << std::endl;
@@ -109,28 +110,41 @@ int main(int argn, char** args) {
                     wayGraph.Build(board, startPos);
                     std::cerr << wayGraph.ToString() << std::endl;
 
-                    TUnit endPos = startPos.Clone();
-                    size_t endRotation = 0;
-                    wayGraph.FindPositionWithMaxMetrics(endPos, endRotation);
+                    size_t startRotation = 0;
+                    auto endPositionQueue = wayGraph.FindPositionWithMaxMetrics(unit, startRotation);
+                    std::cerr << "Position queue size: " << endPositionQueue.size() << std::endl;
 
-                    std::cerr << "End pos: ";
-                    endPos.DebugPrint();
-
-                    auto ways = wayGraph.FindWay(
-                        startPos.GetPivot().GetPosition(),
-                        0,
-                        endPos.GetPivot().GetPosition(),
-                        endRotation
-                    );
+                    TUnit endUnit = unit.Clone();
+                    TWayGraph::TWays ways;
+                    while (ways.empty() && !endPositionQueue.empty()) {
+                        const auto& endPos = endPositionQueue.top();
+                        endUnit = endPos.Unit.Clone();
+                        std::cerr << "End pos: ";
+                        endUnit.DebugPrint();
+                        ways = wayGraph.FindWay(
+                            startPos.GetPivot().GetPosition(),
+                            0,
+                            endPos.Unit.GetPivot().GetPosition(),
+                            endPos.Direction
+                        );
+                        endPositionQueue.pop();
+                    }
 
                     std::cerr << "ways size: " << ways.size() << '\n' << std::endl;
                     if (ways.empty()) {
                         break;
                     }
 
+                   // solution.Solution += "$";
+                   // solution.Solution += std::to_string(unitNum);
+                   // solution.Solution += "$";
+                    ++unitNum;
                     solution.Solution += MakeSolutionCmdFrom(ways.front());
 
-                    board.LockCells(endPos);
+                    std::cerr << "End pos: ";
+                    endUnit.DebugPrint();
+
+                    board.LockCells(endUnit);
                     board.CollapseRows();
                 }
             }

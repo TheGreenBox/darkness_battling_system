@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <limits>
+#include <algorithm>
 
 TWayGraph::TWayGraph(
     Coords::TColRowPoint::TCoordinate rowShift,
@@ -25,8 +26,12 @@ void TWayGraph::Build(const TBoard& board, const TUnit& srcUnit) {
     unit = unit.TeleportTo(Coords::TColRowPoint(-ColumnShift, -RowShift));
     for (size_t row = 0; row < rows; ++row) {
         for (size_t column = 0; column < columns; ++column) {
+            std::vector<TUnit> allTurns;
             for (size_t turn = 0; turn < TurnDirections; ++turn) {
-                if (board.UnitWillFitInside(unit)) {
+                if (board.UnitWillFitInside(unit)
+                    && allTurns.end() == std::find(allTurns.begin(), allTurns.end(), unit)
+                ) {
+                    allTurns.push_back(unit.Clone());
                     auto& node = GetNode(
                         unit.GetPivot().GetPosition().Column,
                         unit.GetPivot().GetPosition().Row,
@@ -53,15 +58,17 @@ TWayGraph TWayGraph::Clone() const {
     return std::move(copy);
 }
 
-void
+  // struct TEndPosition {
+  //     int Mertics;
+  //     TUnit Unit;
+  //     size_t Direction;
+  // };
+std::priority_queue<TWayGraph::TEndPosition>
 TWayGraph::FindPositionWithMaxMetrics(
-    TUnit& unit,
-    size_t& fromDirection
+    const TUnit& unit,
+    size_t fromDirection
 ) {
-    int maxMetrics = std::numeric_limits<int>::min();
-    size_t maxRow = -1;
-    size_t maxCol = -1;
-    size_t maxDir = -1;
+    std::priority_queue<TEndPosition> ret;
 
     size_t rows = Graph.size();
     size_t columns = Graph.front().size();
@@ -70,7 +77,7 @@ TWayGraph::FindPositionWithMaxMetrics(
         for (size_t column = 0; column < columns; ++column) {
             for (size_t turn = 0; turn < TurnDirections; ++turn) {
                 auto& node = Graph.at(row).at(column).at(turn);
-                if (node.Available && node.Metrics > maxMetrics) {
+                if (node.Available) {
 
                    // std::cerr << "Metrics: "
                    //     << "{ " << row
@@ -79,31 +86,21 @@ TWayGraph::FindPositionWithMaxMetrics(
                    //     << " }: " << node.Metrics
                    //     << std::endl;
 
-                    maxMetrics = node.Metrics;
-                    maxRow = row;
-                    maxCol = column;
-                    maxDir = turn;
+                    Coords::TColRowPoint pivot = GetCoordinateFromIndex(column, row);
+                    auto current = unit.TeleportTo(pivot);
+                    for (size_t rotationNum = 0; rotationNum < turn; ++rotationNum) {
+                        current = current.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+                    }
+                    TEndPosition pos;
+                    pos.Metrics = node.Metrics;
+                    pos.Unit = std::move(current);
+                    pos.Direction = turn;
+                    ret.push(std::move(pos));
                 }
             }
         }
     }
-
-    fromDirection = maxDir;
-
-
-    Coords::TColRowPoint pivot = GetCoordinateFromIndex(maxCol, maxRow);
-    std::cerr << "Before teleport: ";
-    unit.DebugPrint();
-    unit = unit.TeleportTo(pivot);
-    std::cerr << "Before rotation: ";
-    unit.DebugPrint();
-    for (size_t rotationNum = 0; rotationNum < fromDirection; ++rotationNum) {
-        unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
-        std::cerr << "rotation: " << rotationNum << " ";
-        unit.DebugPrint();
-    }
-
-    return;
+    return ret;
 }
 
 TWayGraph::TWays
@@ -116,6 +113,16 @@ TWayGraph::FindWay(
     FinishPoint = TSegment(to);
     FinishDirection = toDirection;
 
+    size_t rows = Graph.size();
+    size_t columns = Graph.front().size();
+    for (size_t row = 0; row < rows; ++row) {
+        for (size_t column = 0; column < columns; ++column) {
+            for (size_t turn = 0; turn < TurnDirections; ++turn) {
+                auto& node = Graph.at(row).at(column).at(turn);
+                node.Color = EColor::WHITE;
+            }
+        }
+    }
     Dfs(TSegment(from), fromDirection);
     return AllWays;
 }
