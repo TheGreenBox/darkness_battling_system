@@ -15,7 +15,7 @@ public:
     bool operator!=(const TSegment&) const;
 
     TSegment Slide(EMoveOperations direction) const;
-    TSegment TeleportBy(const Coords::TColRowPoint& delta) const;
+    TSegment TeleportBy(const Coords::THexPoint& hexDelta) const;
 
     TSegment
     RotateAround(

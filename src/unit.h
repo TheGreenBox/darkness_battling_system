@@ -40,7 +40,7 @@ private:
 
     TSegments SlideSegments(EMoveOperations direction) const;
     TSegments RotateSegments(EMoveOperations direction) const;
-    TSegments TeleportSegments(const Coords::TColRowPoint& delta) const;
+    TSegments TeleportSegments(const Coords::THexPoint& hexDelta) const;
 
     TSegment Pivot;
     TSegments Segments;

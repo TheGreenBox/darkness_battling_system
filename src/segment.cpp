@@ -48,13 +48,15 @@ TSegment TSegment::Slide(EMoveOperations direction) const {
     return TSegment(newPos);
 }
 
-TSegment TSegment::TeleportBy(const Coords::TColRowPoint& delta) const {
-    Coords::TColRowPoint newPosition(
-        Position.Column + delta.Column,
-        Position.Row + delta.Row
+TSegment TSegment::TeleportBy(const Coords::THexPoint& hexDelta) const {
+    Coords::THexPoint oldHexPos = Coords::ToHex(Position);
+    Coords::THexPoint newHexPos(
+        oldHexPos.X + hexDelta.X,
+        oldHexPos.Y + hexDelta.Y,
+        oldHexPos.Z + hexDelta.Z
     );
 
-    return TSegment(newPosition);
+    return TSegment(Coords::FromHex(newHexPos));
 }
 
 TSegment

@@ -64,20 +64,23 @@ TUnit::TSegments TUnit::SlideSegments(EMoveOperations direction) const {
 
 TUnit TUnit::TeleportTo(const Coords::TColRowPoint& newPivotPos) const {
     Coords::TColRowPoint oldPivotPos = Pivot.GetPosition();
-    Coords::TColRowPoint delta(
-        newPivotPos.Column - oldPivotPos.Column,
-        newPivotPos.Row - oldPivotPos.Row
+    Coords::THexPoint newPivotHexPos = Coords::ToHex(newPivotPos);
+    Coords::THexPoint oldPivotHexPos = Coords::ToHex(oldPivotPos);
+
+    Coords::THexPoint hexDelta(
+        newPivotHexPos.X - oldPivotHexPos.X,
+        newPivotHexPos.Y - oldPivotHexPos.Y,
+        newPivotHexPos.Z - oldPivotHexPos.Z
     );
 
-    return TUnit(Pivot.TeleportBy(delta), TeleportSegments(delta));
+    return TUnit(TSegment(newPivotPos), TeleportSegments(hexDelta));
 }
 
-TUnit::TSegments TUnit::TeleportSegments(const Coords::TColRowPoint& delta) const {
+TUnit::TSegments TUnit::TeleportSegments(const Coords::THexPoint& hexDelta) const {
     TSegments ret;
     ret.reserve(Segments.size());
-    for (const TSegment& segment : Segments) {
-        TSegment teleportedSegment = segment.TeleportBy(delta);
-        ret.push_back(teleportedSegment);
+    for (const auto& segment : Segments) {
+        ret.push_back(segment.TeleportBy(hexDelta));
     }
 
     return ret;
