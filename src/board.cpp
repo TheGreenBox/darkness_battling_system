@@ -3,6 +3,7 @@
 #include "exception.h"
 
 #include <algorithm>
+#include <iostream>
 
 const TBoard::Status TBoard::CELL_IS_LOCKED = true;
 const TBoard::Status TBoard::CELL_IS_UNLOCKED = false;
@@ -121,8 +122,9 @@ TUnit TBoard::TeleportUnitToSpawnPosition(const TUnit& unit) const {
             left = segment.GetPosition().Column;
         }
     }
+    std::cerr << "r, l: {" << right << ", " << left << "}\n";
     Coords::TColRowPoint::TCoordinate middle = (right - left) / 2;
-    Coords::TColRowPoint::TCoordinate shift = GetColumnCount()/2 - middle;
+    Coords::TColRowPoint::TCoordinate shift = (GetColumnCount() + 1)/2 - 1 - middle;
 
     return unit.TeleportTo(
         Coords::TColRowPoint(
