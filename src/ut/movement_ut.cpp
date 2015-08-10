@@ -128,6 +128,41 @@ void TestReversability() {
     }
 }
 
+void UnitTest1() {
+    TSegment pivot(Coords::TColRowPoint(0, 0));
+    TUnit::TSegments segments{
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(0, 1)),
+        TSegment(Coords::TColRowPoint(0, 2)),
+    };
+    TUnit unit(pivot, std::move(segments));
+
+
+    TUnit result1 = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+
+    TUnit::TSegments expectedSegments1{
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(1, 0)),
+        TSegment(Coords::TColRowPoint(1, 1)),
+    };
+
+    TUnit expected1(pivot, std::move(expectedSegments1));
+
+    ExpectEqual(result1, expected1);
+
+    TUnit result2 = result1.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+
+    TUnit::TSegments expectedSegments2{
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(0, -1)),
+        TSegment(Coords::TColRowPoint(1, -1)),
+    };
+
+    TUnit expected2(pivot, std::move(expectedSegments2));
+
+    ExpectEqual(result2, expected2);
+}
+
 } // namespace Rotation
 
 namespace Slide {
@@ -192,6 +227,28 @@ void TestToOther() {
     ExpectEqual(result, expected);
 }
 
+void TestLongTeleport() {
+    TSegment pivot(Coords::TColRowPoint(0, 0));
+    TUnit::TSegments unitSegments = {
+        TSegment(Coords::TColRowPoint(0, 0)),
+        TSegment(Coords::TColRowPoint(0, 1)),
+        TSegment(Coords::TColRowPoint(0, 2)),
+    };
+    TUnit unit(pivot, std::move(unitSegments));
+    Coords::TColRowPoint destination(6, 9);
+
+    TSegment expectedPivot(Coords::TColRowPoint(6, 9));
+    TUnit::TSegments expectedSegments = {
+        TSegment(Coords::TColRowPoint(6, 9)),
+        TSegment(Coords::TColRowPoint(7, 10)),
+        TSegment(Coords::TColRowPoint(6, 11)),
+    };
+
+    TUnit expectedUnit(expectedPivot, std::move(expectedSegments));
+
+    ExpectEqual(unit.TeleportTo(destination), expectedUnit);
+}
+
 } // namespace Teleport
 
 } // unnamed namespace
@@ -203,6 +260,7 @@ int main() {
     Rotation::Test3();
     Rotation::Test4();
     Rotation::TestReversability();
+    Rotation::UnitTest1();
 
     Slide::Test1();
     Slide::Test2();
@@ -211,6 +269,7 @@ int main() {
 
     Teleport::TestToSelf();
     Teleport::TestToOther();
+    Teleport::TestLongTeleport();
 
     return 0;
 }
