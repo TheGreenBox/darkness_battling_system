@@ -100,19 +100,11 @@ int main(int argn, char** args) {
 
                 TBoard board = session.GetInitialBoard();
                 for (const auto& unit : gameSet) {
-                    std::cerr
-                        << "{ " << unit.GetPivot().GetPosition().Column
-                        << ", " << unit.GetPivot().GetPosition().Row
-                        << " }: [";
-                    for (const auto& segment : unit.GetSegments()) {
-                        std::cerr
-                            << "{ " << segment.GetPosition().Column
-                            << ", " << segment.GetPosition().Row
-                            << " },";
-                    }
-                    std::cerr << "]" << std::endl;
+                    unit.DebugPrint();
                     std::cerr << board.ToString() << std::endl;
                     TUnit startPos = board.TeleportUnitToSpawnPosition(unit);
+                    std::cerr << "Start pos: ";
+                    startPos.DebugPrint();
                     TWayGraph wayGraph(2, 2);
                     wayGraph.Build(board, startPos);
                     std::cerr << wayGraph.ToString() << std::endl;
@@ -121,17 +113,8 @@ int main(int argn, char** args) {
                     size_t endRotation = 0;
                     wayGraph.FindPositionWithMaxMetrics(endPos, endRotation);
 
-                    std::cerr << "Start pos: "
-                        << "{ " << startPos.GetPivot().GetPosition().Column
-                        << ", " << startPos.GetPivot().GetPosition().Row
-                        << ", " << 0
-                        << " }" << std::endl;
-
-                    std::cerr << "End pos: "
-                        << "{ " << endPos.GetPivot().GetPosition().Column
-                        << ", " << endPos.GetPivot().GetPosition().Row
-                        << ", " << endRotation
-                        << " }" << std::endl;
+                    std::cerr << "End pos: ";
+                    endPos.DebugPrint();
 
                     auto ways = wayGraph.FindWay(
                         startPos.GetPivot().GetPosition(),

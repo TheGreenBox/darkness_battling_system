@@ -32,6 +32,8 @@ public:
     const TSegments& GetSegments() const;
     const TSegment& GetPivot() const;
 
+    void DebugPrint() const;
+
 private:
     TUnit Slide(EMoveOperations direction) const;
     TUnit Rotate(EMoveOperations direction) const;

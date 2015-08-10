@@ -4,6 +4,7 @@
 #include "segment.h"
 
 #include <algorithm>
+#include <iostream>
 
 TUnit::TUnit(const TSegment& pivot, TSegments&& segments)
     : Pivot(pivot)
@@ -110,4 +111,18 @@ const TSegment& TUnit::GetPivot() const {
 
 TUnit TUnit::Clone() const {
     return TUnit(Pivot, TSegments(Segments));
+}
+
+void TUnit::DebugPrint() const {
+    std::cerr
+        << "{ " << GetPivot().GetPosition().Column
+        << ", " << GetPivot().GetPosition().Row
+        << " }: [";
+    for (const auto& segment : GetSegments()) {
+        std::cerr
+            << "{ " << segment.GetPosition().Column
+            << ", " << segment.GetPosition().Row
+            << " },";
+    }
+    std::cerr << "]" << std::endl;
 }
