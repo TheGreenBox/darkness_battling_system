@@ -92,9 +92,15 @@ TWayGraph::FindPositionWithMaxMetrics(
 
 
     Coords::TColRowPoint pivot = GetCoordinateFromIndex(maxCol, maxRow);
+    std::cerr << "Before teleport: ";
+    unit.DebugPrint();
     unit = unit.TeleportTo(pivot);
+    std::cerr << "Before rotation: ";
+    unit.DebugPrint();
     for (size_t rotationNum = 0; rotationNum < fromDirection; ++rotationNum) {
         unit = unit.Move(EMoveOperations::ROTATE_ANTI_CLOCKWISE);
+        std::cerr << "rotation: " << rotationNum << " ";
+        unit.DebugPrint();
     }
 
     return;
@@ -323,14 +329,19 @@ bool TWayGraph::IsValid(const Coords::TColRowPoint& pt) const {
 
 std::string TWayGraph::ToString() const {
     std::ostringstream os(std::ios_base::ate);
+    int rowInd = 0;
     for (const auto& row : Graph) {
+        if (rowInd % 2 == 1) {
+            os << " ";
+        }
+        ++rowInd;
         for (size_t dir = 0; dir < TurnDirections; ++dir) {
-            os << "   ";
+            os << "  ";
             for (const auto& vert : row) {
                 if (vert[dir].Available) {
-                    os << "O";
+                    os << ". ";
                 } else {
-                    os << "X";
+                    os << "x ";
                 }
             }
         }
