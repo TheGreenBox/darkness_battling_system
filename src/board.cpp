@@ -149,9 +149,14 @@ std::string TBoard::ToString() const {
 
     ret += border;
     ret += '\n';
+    int rowNum = 0;
     for (const auto& row : Cells) {
+        if ((rowNum % 2) != 0) {
+            ret += ' ';
+        }
+        ++rowNum;
         for (bool cellStatus : row) {
-            ret += cellStatus == CELL_IS_UNLOCKED ? 'O' : 'X';
+            ret += cellStatus == CELL_IS_UNLOCKED ? ". " : "O ";
         }
         ret += '\n';
     }
