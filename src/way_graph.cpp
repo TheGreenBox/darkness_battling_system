@@ -324,11 +324,11 @@ TWayGraph::GetNode(
 
 bool TWayGraph::IsValid(const Coords::TColRowPoint& pt) const {
     TCoordinate rowInd = pt.Row + RowShift;
-    if (rowInd < 0 || rowInd > static_cast<TCoordinate>(Graph.size())) {
+    if (rowInd < 0 || rowInd >= static_cast<TCoordinate>(Graph.size())) {
         return false;
     }
     TCoordinate columnInd = pt.Column + ColumnShift;
-    if (columnInd < 0 || columnInd > static_cast<TCoordinate>(Graph.front().size())) {
+    if (columnInd < 0 || columnInd >= static_cast<TCoordinate>(Graph.front().size())) {
         return false;
     }
     return true;
